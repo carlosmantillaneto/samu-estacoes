@@ -3,89 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Equipamentos TI</title>
+    <title>Dashboard TI - SAMU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
-        tailwind.config = { theme: { extend: { colors: { brand: { blue: '#1e3a8a', red: '#dc2626' } } } } }
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        spdm: { blue: '#005594', green: '#009b3a' } 
+                    } 
+                } 
+            } 
+        }
     </script>
 </head>
 <body class="bg-gray-100 min-h-screen font-sans">
-
-    <!-- Header -->
-    <header class="bg-brand-blue text-white shadow-md sticky top-0 z-40">
+    
+    <!-- Header com padrão de cor SPDM-PAIS -->
+    <header class="bg-spdm-blue text-white shadow-md sticky top-0 z-40 border-b-4 border-spdm-green">
         <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold"><i class="fas fa-users-cog mr-2"></i> Estações de Trabalho</h1>
-            <button class="bg-brand-red hover:bg-red-700 px-3 py-1 rounded-md text-sm transition" onclick="carregarDados()">
+            <button class="bg-spdm-green hover:bg-green-700 px-3 py-1 rounded-md text-sm transition shadow" onclick="carregarDados()">
                 <i class="fas fa-sync-alt"></i> Atualizar
             </button>
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="max-w-md mx-auto px-4 py-6 mb-20">
         <div id="loading" class="text-center py-10">
-            <i class="fas fa-spinner fa-spin text-4xl text-brand-blue"></i>
+            <i class="fas fa-spinner fa-spin text-4xl text-spdm-blue"></i>
             <p class="mt-2 text-gray-600">Sincronizando com a base...</p>
         </div>
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
-    <!-- Botão Flutuante (FAB) -->
-    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-brand-blue text-white w-14 h-14 rounded-full shadow-lg hover:bg-blue-800 transition flex items-center justify-center text-2xl z-40">
+    <!-- Botão Adicionar Novo -->
+    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-spdm-green text-white w-14 h-14 rounded-full shadow-lg hover:bg-green-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
         <i class="fas fa-plus"></i>
     </button>
 
-    <!-- Modal de Cadastro / Edição -->
-    <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center px-4">
-        <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden">
-            <div class="bg-brand-blue px-4 py-3 flex justify-between items-center text-white">
+    <!-- Modal de Formulário -->
+    <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
+        <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="bg-spdm-blue px-4 py-3 flex justify-between items-center text-white border-b-4 border-spdm-green shrink-0">
                 <h2 id="titulo-modal" class="font-bold">Nova Estação</h2>
                 <button onclick="fecharModal()" class="text-white hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
             </div>
-            <form id="form-equipamento" class="p-4 space-y-3" onsubmit="salvarEquipamento(event)">
-                <!-- Campos ocultos para gerenciar a ação -->
-                <input type="hidden" id="item-id">
-                <input type="hidden" id="item-acao" value="criar">
-                
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Responsável / Usuário</label>
-                    <input type="text" id="responsavel" class="w-full border rounded p-2 text-sm uppercase bg-blue-50 focus:bg-white" placeholder="Ex: RECEPÇÃO SAMU">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
+            
+            <div class="overflow-y-auto p-4">
+                <form id="form-equipamento" class="space-y-4" onsubmit="salvarEquipamento(event)">
+                    <input type="hidden" id="item-id">
+                    <input type="hidden" id="item-acao" value="criar">
+                    
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Tipo de Item</label>
-                        <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-brand-blue" required>
-                            <option value="Computador">Computador</option>
-                            <option value="Monitor">Monitor</option>
-                            <option value="Nobreak">Nobreak</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Responsável / Usuário</label>
+                        <input type="text" id="responsavel" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required placeholder="Ex: RECEPÇÃO">
                     </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Tipo de Item</label>
+                            <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" required>
+                                <option value="Computador">Computador</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="Nobreak">Nobreak</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Status</label>
+                            <select id="status" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" required>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Manutenção">Manutenção</option>
+                                <option value="Reserva">Reserva</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Host / Patrimônio</label>
+                            <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Serial Number</label>
+                            <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Marca</label>
+                            <input type="text" id="marca" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Modelo</label>
+                            <input type="text" id="modelo" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
+                        </div>
+                    </div>
+
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Status</label>
-                        <select id="status" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-brand-blue" required>
-                            <option value="Ativo">Ativo</option>
-                            <option value="Manutenção">Manutenção</option>
-                            <option value="Inativo">Inativo</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Setor / Base</label>
+                        <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
                     </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Hostname / Patrimônio</label>
-                    <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Marca / Modelo</label>
-                    <input type="text" id="modelo" class="w-full border rounded p-2 text-sm" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Setor / Base</label>
-                    <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase" required>
-                </div>
-                <button type="submit" id="btn-salvar" class="w-full bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-2">
-                    Salvar Registro
-                </button>
-            </form>
+                    
+                    <button type="submit" id="btn-salvar" class="w-full bg-spdm-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-4">
+                        Salvar Registro
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -109,41 +136,49 @@
                     dadosGlobais = result.data;
                     const estacoes = {};
                     
-                    // Agrupar os dados
                     dadosGlobais.forEach(item => {
-                        const resp = item['Responsável'] ? item['Responsável'].toUpperCase() : 'SEM ATRIBUIÇÃO';
-                        if (!estacoes[resp]) estacoes[resp] = [];
-                        estacoes[resp].push(item);
+                        const respRaw = item['Responsável'] || 'SEM ATRIBUIÇÃO';
+                        const resp = respRaw.toUpperCase(); 
+                        if (!estacoes[resp]) estacoes[resp] = { nomeDisplay: respRaw, itens: [] };
+                        estacoes[resp].itens.push(item);
                     });
 
-                    // Renderizar
-                    Object.keys(estacoes).sort().forEach((responsavel, index) => {
-                        const equipamentos = estacoes[responsavel];
+                    Object.keys(estacoes).sort().forEach((chaveResp, index) => {
+                        const grupo = estacoes[chaveResp];
+                        const equipamentos = grupo.itens;
                         const setorInfo = equipamentos[0]['Setor'] || '-';
                         
                         let htmlEquips = '';
                         equipamentos.forEach(eq => {
-                            let statusColor = eq['Status'] === 'Ativo' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200';
+                            let statusColor = eq['Status'] === 'Ativo' ? 'bg-green-100 text-green-800 border-green-200' : 
+                                              eq['Status'] === 'Reserva' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-red-100 text-red-800 border-red-200';
+                            
                             let icone = 'fa-desktop';
                             if(eq['Tipo'].toLowerCase().includes('monitor')) icone = 'fa-tv';
                             if(eq['Tipo'].toLowerCase().includes('nobreak')) icone = 'fa-car-battery';
 
+                            // Estrutura de Informações Travadas com Lápis para Edição
                             htmlEquips += `
-                                <div class="flex justify-between items-center bg-white p-3 border rounded-md shadow-sm mb-2">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas ${icone} text-gray-400 text-lg"></i>
-                                        <div>
-                                            <p class="font-bold text-gray-800 text-sm">${eq['Hostname/Identificação']}</p>
-                                            <p class="text-[11px] text-gray-500">${eq['Marca/Modelo']}</p>
+                                <div class="bg-white p-3 border rounded-md shadow-sm mb-3">
+                                    <div class="flex justify-between items-start mb-2 pb-2 border-b border-gray-100">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas ${icone} text-gray-400"></i>
+                                            <span class="font-bold text-sm text-gray-800">${eq['Tipo']}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase border ${statusColor}">
+                                                ${eq['Status']}
+                                            </span>
+                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1 rounded transition">
+                                                <i class="fas fa-edit text-lg"></i>
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 rounded text-[10px] font-bold uppercase border ${statusColor}">
-                                            ${eq['Status']}
-                                        </span>
-                                        <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-blue-500 hover:bg-blue-50 p-2 rounded transition">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                                        <p><span class="font-semibold">Host/Patrimônio:</span><br>${eq['Hostname'] || eq['Hostname/Identificação'] || '-'}</p>
+                                        <p><span class="font-semibold">Serial Number:</span><br>${eq['Serial Number'] || '-'}</p>
+                                        <p><span class="font-semibold">Marca:</span><br>${eq['Marca'] || '-'}</p>
+                                        <p><span class="font-semibold">Modelo:</span><br>${eq['Modelo'] || '-'}</p>
                                     </div>
                                 </div>
                             `;
@@ -151,18 +186,18 @@
 
                         const cardHTML = `
                             <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                                <div class="bg-gray-50 p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition" onclick="toggleAccordion('acc-${index}')">
+                                <div class="bg-gray-50 p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion('acc-${index}')">
                                     <div class="flex items-center gap-3">
-                                        <div class="bg-blue-100 p-2 rounded-full text-brand-blue flex-shrink-0">
+                                        <div class="bg-blue-100 p-2 rounded-full text-spdm-blue flex-shrink-0">
                                             <i class="fas fa-user"></i>
                                         </div>
                                         <div class="truncate">
-                                            <h3 class="font-bold text-gray-800 uppercase truncate">${responsavel}</h3>
+                                            <h3 class="font-bold text-gray-800 uppercase truncate">${grupo.nomeDisplay}</h3>
                                             <p class="text-xs text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
-                                        <span class="bg-brand-blue text-white text-[10px] font-bold px-2 py-1 rounded-full">${equipamentos.length} itens</span>
+                                        <span class="bg-spdm-green text-white text-[10px] font-bold px-2 py-1 rounded-full">${equipamentos.length}</span>
                                         <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200" id="icon-${index}"></i>
                                     </div>
                                 </div>
@@ -204,18 +239,18 @@
                 document.getElementById('item-id').value = '';
             } else if (acao === 'editar') {
                 document.getElementById('titulo-modal').innerText = 'Editar Equipamento';
-                
-                // Busca os dados do equipamento clicado no array global
                 const item = dadosGlobais.find(i => i['ID'].toString() === id.toString());
                 
                 if(item) {
                     document.getElementById('item-id').value = item['ID'];
                     document.getElementById('responsavel').value = item['Responsável'] || '';
-                    document.getElementById('tipo').value = item['Tipo'];
-                    document.getElementById('hostname').value = item['Hostname/Identificação'];
-                    document.getElementById('modelo').value = item['Marca/Modelo'];
-                    document.getElementById('setor').value = item['Setor'];
-                    document.getElementById('status').value = item['Status'];
+                    document.getElementById('tipo').value = item['Tipo'] || 'Computador';
+                    document.getElementById('hostname').value = item['Hostname'] || item['Hostname/Identificação'] || '';
+                    document.getElementById('marca').value = item['Marca'] || '';
+                    document.getElementById('modelo').value = item['Modelo'] || '';
+                    document.getElementById('serial').value = item['Serial Number'] || '';
+                    document.getElementById('setor').value = item['Setor'] || '';
+                    document.getElementById('status').value = item['Status'] || 'Ativo';
                 }
             }
         }
@@ -233,11 +268,13 @@
             const dados = {
                 acao: document.getElementById('item-acao').value,
                 id: document.getElementById('item-id').value,
-                responsavel: document.getElementById('responsavel').value.toUpperCase(),
+                responsavel: document.getElementById('responsavel').value.trim(),
                 tipo: document.getElementById('tipo').value,
-                hostname: document.getElementById('hostname').value.toUpperCase(),
-                modelo: document.getElementById('modelo').value,
-                setor: document.getElementById('setor').value.toUpperCase(),
+                hostname: document.getElementById('hostname').value.trim(),
+                marca: document.getElementById('marca').value.trim(),
+                modelo: document.getElementById('modelo').value.trim(),
+                serial: document.getElementById('serial').value.trim(),
+                setor: document.getElementById('setor').value.trim(),
                 status: document.getElementById('status').value
             };
 
@@ -246,7 +283,7 @@
                 fecharModal();
                 carregarDados();
             } catch (error) {
-                alert("Erro ao comunicar com a planilha. Verifique a internet.");
+                alert("Erro ao comunicar com a base. Verifique a internet.");
             } finally {
                 btn.innerHTML = 'Salvar Registro';
                 btn.disabled = false;
