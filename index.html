@@ -21,7 +21,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU Mogi (Baseado no site oficial) -->
+    <!-- Header Oficial SAMU Mogi -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -162,7 +162,7 @@
                     const estacoes = {};
                     
                     dadosGlobais.forEach(item => {
-                        const respRaw = item['Responsável'] || item['Responsavel'] || 'SEM ATRIBUIÇÃO';
+                        const respRaw = item['Responsavel'] || item['Responsável'] || 'SEM ATRIBUIÇÃO';
                         const resp = respRaw.toUpperCase(); 
                         if (!estacoes[resp]) estacoes[resp] = { nomeDisplay: respRaw, setor: item['Setor'] || '-', itens: [] };
                         estacoes[resp].itens.push(item);
@@ -264,17 +264,9 @@
             if (tipo === 'Monitor') {
                 blocoHardware.style.display = 'none';
                 blocoGeralCampos.style.display = 'none';
-                document.getElementById('hostname').value = '-';
-                document.getElementById('patrimonio').value = '-';
-                document.getElementById('processador').value = '-';
-                document.getElementById('memoria').value = '-';
-                document.getElementById('armazenamento').value = '-';
             } else if (tipo === 'Nobreak' || tipo === 'Impressora') {
                 blocoHardware.style.display = 'none';
                 blocoGeralCampos.style.display = 'block';
-                document.getElementById('processador').value = '-';
-                document.getElementById('memoria').value = '-';
-                document.getElementById('armazenamento').value = '-';
             } else {
                 blocoHardware.style.display = 'block';
                 blocoGeralCampos.style.display = 'block';
@@ -295,8 +287,8 @@
                 const item = dadosGlobais.find(i => i['ID'].toString().trim() === id.toString().trim());
                 
                 if(item) {
-                    document.getElementById('item-id').value = item['ID'];
-                    document.getElementById('responsavel').value = item['Responsável'] || item['Responsavel'] || '';
+                    document.getElementById('item-id').value = item['ID'] || '';
+                    document.getElementById('responsavel').value = item['Responsavel'] || item['Responsável'] || '';
                     document.getElementById('tipo').value = item['Tipo'] || 'Computador';
                     document.getElementById('hostname').value = item['Hostname'] || '';
                     document.getElementById('patrimonio').value = item['Patrimonio'] || '';
