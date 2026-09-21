@@ -176,15 +176,19 @@
                         estacoes[resp].itens.push(item);
                     });
 
-                    Object.keys(estacoes).sort().forEach((chaveResp, index) => {
+                    let indexCounter = 0;
+                    Object.keys(estacoes).sort().forEach(chaveResp => {
                         const grupo = estacoes[chaveResp];
                         const equipamentos = grupo.itens;
                         const setorInfo = equipamentos[0]['Setor'] || '-';
+                        const currentIdx = indexCounter++;
                         
                         let htmlEquips = '';
                         equipamentos.forEach(eq => {
-                            let statusColor = eq['Status'] === 'Ativo' ? 'bg-green-100 text-green-800' : 
-                                              eq['Status'] === 'Reserva' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800';
+                            let statusClass = 'bg-green-100 text-green-800';
+                            let eqStatus = eq['Status'] || 'Ativo';
+                            if(eqStatus === 'Reserva') statusClass = 'bg-blue-100 text-blue-800';
+                            if(eqStatus === 'Manutenção' || eqStatus === 'Inativo') statusClass = 'bg-red-100 text-red-800';
                             
                             let icone = 'fa-desktop';
                             let tipoStr = (eq['Tipo'] || '').toLowerCase();
@@ -192,60 +196,53 @@
                             if(tipoStr.includes('nobreak')) icone = 'fa-car-battery';
                             if(tipoStr.includes('impressora')) icone = 'fa-print';
 
-                            htmlEquips += `
-                                <div class="bg-white p-3 border rounded-lg shadow-sm mb-3">
-                                    <div class="flex justify-between items-center mb-2 pb-2 border-b">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas ${icone} text-spdm-blue"></i>
-                                            <span class="font-bold text-sm text-gray-800 uppercase">${eq['Tipo']}</span>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase ${statusColor}">
-                                                ${eq['Status']}
-                                            </span>
-                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">HOSTNAME</span>${eq['Hostname'] || '-'}</div>
-                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">PATRIMÔNIO</span>${eq['Patrimonio'] || '-'}</div>
-                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">MARCA / MODELO</span>${eq['Marca'] || '-'} ${eq['Modelo'] || ''}</div>
-                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">SERIAL NUMBER</span>${eq['Serial Number'] || '-'}</div>
-                                        ${eq['Processador'] ? `<div class="bg-gray-50 p-1.5 rounded border col-span-2"><span class="font-semibold block text-[10px] text-gray-400">PROCESSADOR / RAM / SSD</span>${eq['Processador']} | ${eq['Memoria'] \vert{}\vert{} ''} \vert{}${eq['Armazenamento'] || ''}</div>` : ''}
-                                    </div>
-                                </div>
-                            `;
+                            let procInfo = '';
+                            if(eq['Processador'] && eq['Processador'].trim() !== '') {
+                                procInfo = '<div class="bg-gray-50 p-1.5 rounded border col-span-2"><span class="font-semibold block text-[10px] text-gray-400">ESPECIFICAÇÕES</span>' + eq['Processador'] + ' | ' + (eq['Memoria'] || '') + ' | ' + (eq['Armazenamento'] || '') + '</div>';
+                            }
+
+                            htmlEquips += '<div class="bg-white p-3 border rounded-lg shadow-sm mb-3">' +
+                                '<div class="flex justify-between items-center mb-2 pb-2 border-b">' +
+                                    '<div class="flex items-center gap-2">' +
+                                        '<i class="fas ' + icone + ' text-spdm-blue"></i>' +
+                                        '<span class="font-bold text-sm text-gray-800 uppercase">' + eq['Tipo'] + '</span>' +
+                                    '</div>' +
+                                    '<div class="flex items-center gap-2">' +
+                                        '<span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase ' + statusClass + '">' + eqStatus + '</span>' +
+                                        '<button onclick="abrirModal(\'editar\', \'' + eq['ID'] + '\')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
+                                        '<button onclick="deletarEquipamento(event, \'' + eq['ID'] + '\')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="grid grid-cols-2 gap-2 text-xs text-gray-600">' +
+                                    '<div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">HOSTNAME</span>' + (eq['Hostname'] || '-') + '</div>' +
+                                    '<div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">PATRIMÔNIO</span>' + (eq['Patrimonio'] || '-') + '</div>' +
+                                    '<div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">MARCA / MODELO</span>' + (eq['Marca'] || '-') + ' ' + (eq['Modelo'] || '') + '</div>' +
+                                    '<div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">SERIAL NUMBER</span>' + (eq['Serial Number'] || '-') + '</div>' +
+                                    procInfo +
+                                '</div>' +
+                            '</div>';
                         });
 
-                        const cardHTML = `
-                            <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                                <div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion('acc-${index}')">
-                                    <div class="flex items-center gap-3">
-                                        <div class="bg-blue-100 w-9 h-9 flex justify-center items-center rounded-full text-spdm-blue flex-shrink-0">
-                                            <i class="fas fa-user text-sm"></i>
-                                        </div>
-                                        <div class="truncate">
-                                            <h3 class="font-bold text-gray-800 uppercase text-sm truncate">${grupo.nomeDisplay}</h3>
-                                            <p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo} (${equipamentos.length} it.)</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 flex-shrink-0">
-                                        <button onclick="event.stopPropagation(); abrirModal('criar', null, '${grupo.nomeDisplay}')" class="bg-spdm-green text-white w-7 h-7 rounded flex justify-center items-center hover:bg-green-700 transition" title="Adicionar item">
-                                            <i class="fas fa-plus text-xs"></i>
-                                        </button>
-                                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200 text-sm" id="icon-${index}"></i>
-                                    </div>
-                                </div>
-                                <div id="acc-${index}" class="hidden p-3 bg-gray-100 border-t">
-                                    ${htmlEquips}
-                                </div>
-                            </div>
-                        `;
+                        const cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">' +
+                            '<div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion(\'acc-' + currentIdx + '\')">' +
+                                '<div class="flex items-center gap-3">' +
+                                    '<div class="bg-blue-100 w-9 h-9 flex justify-center items-center rounded-full text-spdm-blue flex-shrink-0">' +
+                                        '<i class="fas fa-user text-sm"></i>' +
+                                    '</div>' +
+                                    '<div class="truncate">' +
+                                        '<h3 class="font-bold text-gray-800 uppercase text-sm truncate">' + grupo.nomeDisplay + '</h3>' +
+                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ' + setorInfo + ' (' + equipamentos.length + ' it.)</p>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="flex items-center gap-2 flex-shrink-0">' +
+                                    '<button onclick="event.stopPropagation(); abrirModal(\'criar\', null, \'' + grupo.nomeDisplay + '\')" class="bg-spdm-green text-white w-7 h-7 rounded flex justify-center items-center hover:bg-green-700 transition" title="Adicionar item"><i class="fas fa-plus text-xs"></i></button>' +
+                                    '<i class="fas fa-chevron-down text-gray-400 transition-transform duration-200 text-sm" id="icon-' + currentIdx + '"></i>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div id="acc-' + currentIdx + '" class="hidden p-3 bg-gray-100 border-t">' +
+                                htmlEquips +
+                            '</div>' +
+                        '</div>';
                         lista.innerHTML += cardHTML;
                     });
 
@@ -253,7 +250,7 @@
                     lista.classList.remove('hidden');
                 }
             } catch (error) {
-                loading.innerHTML = `<p class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Falha ao carregar os dados.</p>`;
+                loading.innerHTML = '<p class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Falha ao carregar os dados.</p>';
             }
         }
 
