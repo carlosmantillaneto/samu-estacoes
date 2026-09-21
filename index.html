@@ -109,17 +109,17 @@
                         <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
                     </div>
 
-                    <!-- Campos específicos para computadores/hardwares -->
+                    <!-- Bloco de Hardware -->
                     <div id="bloco-hardware" class="space-y-3 p-3 bg-gray-50 border rounded-md">
                         <p class="text-xs font-bold text-spdm-blue uppercase"><i class="fas fa-microchip mr-1"></i> Especificações Técnicas</p>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Processador</label>
-                            <input type="text" id="processador" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: Intel Core i5 10th Gen">
+                            <input type="text" id="processador" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: Intel Core i5">
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Memória RAM</label>
-                                <input type="text" id="memoria" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: 8GB DDR4">
+                                <input type="text" id="memoria" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: 8GB">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Armazenamento</label>
@@ -184,28 +184,32 @@
                             if(tipoStr.includes('nobreak')) icone = 'fa-car-battery';
                             if(tipoStr.includes('impressora')) icone = 'fa-print';
 
-                            // Visualização em linhas limpas conforme solicitado
+                            // Cada informação no seu quadrado (cards detalhados)
                             htmlEquips += `
-                                <div class="bg-white p-3 border rounded-md shadow-sm mb-2 flex items-center justify-between">
-                                    <div class="flex items-center gap-3 overflow-hidden">
-                                        <div class="bg-gray-100 p-2 rounded text-spdm-blue shrink-0">
-                                            <i class="fas ${icone} text-base"></i>
+                                <div class="bg-white p-3 border rounded-lg shadow-sm mb-3">
+                                    <div class="flex justify-between items-center mb-2 pb-2 border-b">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas ${icone} text-spdm-blue"></i>
+                                            <span class="font-bold text-sm text-gray-800 uppercase">${eq['Tipo']}</span>
                                         </div>
-                                        <div class="truncate text-xs">
-                                            <p class="font-bold text-gray-800 uppercase">${eq['Tipo']} - ${eq['Hostname'] || eq['Patrimonio'] || 'S/N'}</p>
-                                            <p class="text-gray-500 truncate">${eq['Marca'] || ''} ${eq['Modelo'] || ''} ${eq['Processador'] ? '| ' + eq['Processador'] : ''}</p>
+                                        <div class="flex items-center gap-2">
+                                            <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase ${statusColor}">
+                                                ${eq['Status']}
+                                            </span>
+                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2 shrink-0">
-                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase ${statusColor}">
-                                            ${eq['Status']}
-                                        </span>
-                                        <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">HOSTNAME</span>${eq['Hostname'] || '-'}</div>
+                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">PATRIMÔNIO</span>${eq['Patrimonio'] || '-'}</div>
+                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">MARCA / MODELO</span>${eq['Marca'] || '-'} ${eq['Modelo'] || ''}</div>
+                                        <div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">SERIAL NUMBER</span>${eq['Serial Number'] || '-'}</div>
+                                        ${eq['Processador'] ? `<div class="bg-gray-50 p-1.5 rounded border col-span-2"><span class="font-semibold block text-[10px] text-gray-400">PROCESSADOR / RAM / SSD</span>${eq['Processador']} | ${eq['Memoria'] \vert{}\vert{} ''} \vert{}${eq['Armazenamento'] || ''}</div>` : ''}
                                     </div>
                                 </div>
                             `;
@@ -261,8 +265,7 @@
         function tratarMudancaTipo() {
             const tipo = document.getElementById('tipo').value;
             const blocoHardware = document.getElementById('bloco-hardware');
-            // Se for monitor ou nobreak, esconde campos de processador/memória para manter limpo
-            if (tipo === 'Monitor' || tipo === 'Nobreak') {
+            if (tipo === 'Monitor' || tipo === 'Nobreak' || tipo === 'Impressora') {
                 blocoHardware.style.display = 'none';
                 document.getElementById('processador').value = '';
                 document.getElementById('memoria').value = '';
@@ -284,7 +287,9 @@
                 tratarMudancaTipo();
             } else if (acao === 'editar') {
                 document.getElementById('titulo-modal').innerText = 'Editar Equipamento';
-                const item = dadosGlobais.find(i => i['ID'].toString() === id.toString());
+                
+                // CORREÇÃO CRUCIAL: Conversão para String em ambos os lados para garantir correspondência exata do ID
+                const item = dadosGlobais.find(i => i['ID'].toString().trim() === id.toString().trim());
                 
                 if(item) {
                     document.getElementById('item-id').value = item['ID'];
@@ -301,6 +306,9 @@
                     document.getElementById('setor').value = item['Setor'] || '';
                     document.getElementById('status').value = item['Status'] || 'Ativo';
                     tratarMudancaTipo();
+                } else {
+                    alert("Erro: Item não encontrado na base de dados.");
+                    fecharModal();
                 }
             }
         }
