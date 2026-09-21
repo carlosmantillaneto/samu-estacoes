@@ -20,7 +20,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen font-sans">
     
-    <!-- Header com padrão de cor SPDM-PAIS -->
+    <!-- Header -->
     <header class="bg-spdm-blue text-white shadow-md sticky top-0 z-40 border-b-4 border-spdm-green">
         <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold"><i class="fas fa-users-cog mr-2"></i> Estações de Trabalho</h1>
@@ -38,9 +38,9 @@
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
-    <!-- Botão Adicionar Novo -->
+    <!-- Botão Flutuante (Criar Novo Responsável/Estação) -->
     <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-spdm-green text-white w-14 h-14 rounded-full shadow-lg hover:bg-green-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
-        <i class="fas fa-plus"></i>
+        <i class="fas fa-user-plus"></i>
     </button>
 
     <!-- Modal de Formulário -->
@@ -150,14 +150,13 @@
                         
                         let htmlEquips = '';
                         equipamentos.forEach(eq => {
-                            let statusColor = eq['Status'] === 'Ativo' ? 'bg-green-100 text-green-800 border-green-200' : 
-                                              eq['Status'] === 'Reserva' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-red-100 text-red-800 border-red-200';
+                            let statusColor = eq['Status'] === 'Ativo' ? 'bg-green-100 text-green-800' : 
+                                              eq['Status'] === 'Reserva' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800';
                             
                             let icone = 'fa-desktop';
                             if(eq['Tipo'].toLowerCase().includes('monitor')) icone = 'fa-tv';
                             if(eq['Tipo'].toLowerCase().includes('nobreak')) icone = 'fa-car-battery';
 
-                            // Estrutura de Informações Travadas com Lápis para Edição
                             htmlEquips += `
                                 <div class="bg-white p-3 border rounded-md shadow-sm mb-3">
                                     <div class="flex justify-between items-start mb-2 pb-2 border-b border-gray-100">
@@ -165,12 +164,17 @@
                                             <i class="fas ${icone} text-gray-400"></i>
                                             <span class="font-bold text-sm text-gray-800">${eq['Tipo']}</span>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase border ${statusColor}">
+                                        <div class="flex items-center gap-1">
+                                            <span class="px-2 py-1 mr-1 rounded text-[10px] font-bold uppercase border ${statusColor}">
                                                 ${eq['Status']}
                                             </span>
-                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1 rounded transition">
-                                                <i class="fas fa-edit text-lg"></i>
+                                            <!-- Botão Lápis (Editar) -->
+                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
+                                                <i class="fas fa-edit text-base"></i>
+                                            </button>
+                                            <!-- Botão Lixeira (Deletar) -->
+                                            <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
+                                                <i class="fas fa-trash text-base"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -186,18 +190,22 @@
 
                         const cardHTML = `
                             <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                                <div class="bg-gray-50 p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion('acc-${index}')">
+                                <div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion('acc-${index}')">
                                     <div class="flex items-center gap-3">
-                                        <div class="bg-blue-100 p-2 rounded-full text-spdm-blue flex-shrink-0">
+                                        <div class="bg-blue-100 w-10 h-10 flex justify-center items-center rounded-full text-spdm-blue flex-shrink-0">
                                             <i class="fas fa-user"></i>
                                         </div>
                                         <div class="truncate">
-                                            <h3 class="font-bold text-gray-800 uppercase truncate">${grupo.nomeDisplay}</h3>
-                                            <p class="text-xs text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo}</p>
+                                            <h3 class="font-bold text-gray-800 uppercase text-sm truncate">${grupo.nomeDisplay}</h3>
+                                            <p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
-                                        <span class="bg-spdm-green text-white text-[10px] font-bold px-2 py-1 rounded-full">${equipamentos.length}</span>
+                                        <!-- Botão Mais dentro do card do Responsável -->
+                                        <button onclick="event.stopPropagation(); abrirModal('criar', null, '${grupo.nomeDisplay}')" class="bg-spdm-green text-white w-7 h-7 rounded flex justify-center items-center hover:bg-green-700 transition" title="Adicionar item para este usuário">
+                                            <i class="fas fa-plus text-sm"></i>
+                                        </button>
+                                        <span class="bg-spdm-blue text-white text-[10px] font-bold px-2 py-1 rounded-full">${equipamentos.length}</span>
                                         <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200" id="icon-${index}"></i>
                                     </div>
                                 </div>
@@ -229,7 +237,7 @@
             }
         }
 
-        function abrirModal(acao, id = null) {
+        function abrirModal(acao, id = null, responsavelPre = '') {
             document.getElementById('modal-cadastro').classList.remove('hidden');
             document.getElementById('item-acao').value = acao;
             
@@ -237,6 +245,8 @@
                 document.getElementById('titulo-modal').innerText = 'Nova Estação / Equipamento';
                 document.getElementById('form-equipamento').reset();
                 document.getElementById('item-id').value = '';
+                // Se clicou no "+" de um usuário específico, já preenche o nome dele
+                document.getElementById('responsavel').value = responsavelPre;
             } else if (acao === 'editar') {
                 document.getElementById('titulo-modal').innerText = 'Editar Equipamento';
                 const item = dadosGlobais.find(i => i['ID'].toString() === id.toString());
@@ -257,6 +267,28 @@
 
         function fecharModal() {
             document.getElementById('modal-cadastro').classList.add('hidden');
+        }
+
+        async function deletarEquipamento(event, id) {
+            if(!confirm("Tem certeza que deseja apagar este equipamento? Essa ação não pode ser desfeita.")) {
+                return;
+            }
+            
+            const btn = event.currentTarget;
+            const iconeOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const dados = { acao: 'deletar', id: id };
+
+            try {
+                await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                carregarDados();
+            } catch (error) {
+                alert("Erro ao apagar o registro.");
+                btn.innerHTML = iconeOriginal;
+                btn.disabled = false;
+            }
         }
 
         async function salvarEquipamento(event) {
