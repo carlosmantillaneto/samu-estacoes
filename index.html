@@ -11,51 +11,52 @@
             theme: { 
                 extend: { 
                     colors: { 
-                        samu: { red: '#CC092F', dark: '#0A2540', blue: '#005594' } 
+                        samured: '#E30613',
+                        samudark: '#1A1A1A'
                     } 
                 } 
             } 
         }
     </script>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans">
+<body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU Mogi -->
-    <header class="bg-samu-dark text-white shadow-md sticky top-0 z-40 border-b-4 border-samu-red">
+    <!-- Header Oficial SAMU Mogi (Baseado no site oficial) -->
+    <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="bg-samu-red p-2 rounded-lg text-white flex items-center justify-center w-10 h-10 shadow-md">
-                    <i class="fas fa-ambulance text-xl"></i>
+                <div class="bg-samured text-white p-2 rounded-md flex items-center justify-center w-10 h-10 shadow">
+                    <i class="fas fa-star-of-life text-xl font-bold"></i>
                 </div>
                 <div>
-                    <h1 class="text-base font-bold leading-tight tracking-wide">Controle Estações</h1>
-                    <p class="text-[11px] text-gray-300 font-medium uppercase tracking-wider">SAMU Mogi</p>
+                    <h1 class="text-base font-bold leading-tight tracking-wide text-samudark">SAMU <span class="text-samured">192</span></h1>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Controle de Estações TI</p>
                 </div>
             </div>
-            <div class="bg-samu-red/20 border border-samu-red/40 px-2.5 py-1 rounded text-[10px] font-bold text-red-300 uppercase">
-                SUPORTE TI
+            <div class="bg-red-50 border border-red-200 px-2 py-1 rounded text-[10px] font-bold text-samured uppercase">
+                MOGI
             </div>
         </div>
     </header>
 
     <main class="max-w-md mx-auto px-4 py-6 mb-20">
         <div id="loading" class="text-center py-10">
-            <i class="fas fa-spinner fa-spin text-4xl text-samu-red"></i>
-            <p class="mt-2 text-gray-600">Sincronizando com a base...</p>
+            <i class="fas fa-spinner fa-spin text-4xl text-samured"></i>
+            <p class="mt-2 text-gray-600 text-sm">Sincronizando com a base...</p>
         </div>
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
     <!-- Botão Flutuante (Criar Novo) -->
-    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-samu-red text-white w-14 h-14 rounded-full shadow-lg hover:bg-red-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
+    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-samured text-white w-14 h-14 rounded-full shadow-lg hover:bg-red-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
         <i class="fas fa-plus"></i>
     </button>
 
     <!-- Modal de Formulário -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="bg-samu-dark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samu-red shrink-0">
-                <h2 id="titulo-modal" class="font-bold text-sm">Nova Estação</h2>
+            <div class="bg-samudark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samured shrink-0">
+                <h2 id="titulo-modal" class="font-bold text-sm">Novo Equipamento</h2>
                 <button onclick="fecharModal()" class="text-white hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
             </div>
             
@@ -66,12 +67,12 @@
                     
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Responsável / Usuário</label>
-                        <input type="text" id="responsavel" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" required placeholder="Ex: RECEPÇÃO">
+                        <input type="text" id="responsavel" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" required placeholder="Ex: RECEPÇÃO">
                     </div>
                     
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Tipo de Item</label>
-                        <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samu-red" onchange="tratarMudancaTipo()" required>
+                        <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samured" onchange="tratarMudancaTipo()" required>
                             <option value="Computador">Computador</option>
                             <option value="Monitor">Monitor</option>
                             <option value="Nobreak">Nobreak</option>
@@ -79,16 +80,15 @@
                         </select>
                     </div>
                     
-                    <!-- Campos condicionais para Computador/Nobreak/Impressora -->
                     <div id="bloco-geral-campos" class="space-y-3">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Hostname</label>
-                                <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                                <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Patrimônio</label>
-                                <input type="text" id="patrimonio" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                                <input type="text" id="patrimonio" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                             </div>
                         </div>
                     </div>
@@ -96,44 +96,44 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Marca / Fabricante</label>
-                            <input type="text" id="marca" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                            <input type="text" id="marca" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Modelo</label>
-                            <input type="text" id="modelo" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                            <input type="text" id="modelo" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Serial Number</label>
-                        <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                        <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                     </div>
 
                     <!-- Bloco de Hardware -->
                     <div id="bloco-hardware" class="space-y-3 p-3 bg-gray-50 border rounded-md">
-                        <p class="text-xs font-bold text-samu-dark uppercase"><i class="fas fa-microchip mr-1"></i> Especificações Técnicas</p>
+                        <p class="text-xs font-bold text-samudark uppercase"><i class="fas fa-microchip mr-1 text-samured"></i> Especificações Técnicas</p>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Processador</label>
-                            <input type="text" id="processador" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samu-red" placeholder="-">
+                            <input type="text" id="processador" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samured" placeholder="-">
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Memória RAM</label>
-                                <input type="text" id="memoria" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samu-red" placeholder="-">
+                                <input type="text" id="memoria" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samured" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Armazenamento</label>
-                                <input type="text" id="armazenamento" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samu-red" placeholder="-">
+                                <input type="text" id="armazenamento" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-samured" placeholder="-">
                             </div>
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Setor / Base</label>
-                        <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samu-red" placeholder="-">
+                        <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="-">
                     </div>
                     
-                    <button type="submit" id="btn-salvar" class="w-full bg-samu-red hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-3">
+                    <button type="submit" id="btn-salvar" class="w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-3 shadow">
                         Salvar Registro
                     </button>
                 </form>
@@ -188,7 +188,6 @@
                                 specHtml = '<div class="bg-gray-50 p-1.5 rounded border col-span-2"><span class="font-semibold block text-[10px] text-gray-400">ESPECIFICAÇÕES</span>' + eq['Processador'] + ' | ' + (eq['Memoria'] || '-') + ' | ' + (eq['Armazenamento'] || '-') + '</div>';
                             }
 
-                            // Oculta hostname/patrimonio se for monitor
                             let infoCampos = '';
                             if(!tipoStr.includes('monitor')) {
                                 infoCampos = '<div class="bg-gray-50 p-1.5 rounded border"><span class="font-semibold block text-[10px] text-gray-400">HOSTNAME</span>' + (eq['Hostname'] || '-') + '</div>' +
@@ -198,11 +197,11 @@
                             htmlEquips += '<div class="bg-white p-3 border rounded-lg shadow-sm mb-3">' +
                                 '<div class="flex justify-between items-center mb-2 pb-2 border-b">' +
                                     '<div class="flex items-center gap-2">' +
-                                        '<i class="fas ' + icone + ' text-samu-red"></i>' +
+                                        '<i class="fas ' + icone + ' text-samured"></i>' +
                                         '<span class="font-bold text-sm text-gray-800 uppercase">' + eq['Tipo'] + '</span>' +
                                     '</div>' +
                                     '<div class="flex items-center gap-1">' +
-                                        '<button onclick="abrirModal(\'editar\', \'' + eq['ID'] + '\')" class="text-samu-red hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
+                                        '<button onclick="abrirModal(\'editar\', \'' + eq['ID'] + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
                                         '<button onclick="deletarEquipamento(event, \'' + eq['ID'] + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
                                     '</div>' +
                                 '</div>' +
@@ -216,14 +215,14 @@
                         });
 
                         const cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
-                            '<div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-samu-red" onclick="toggleAccordion(\'acc-' + currentIdx + '\')">' +
+                            '<div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-samured" onclick="toggleAccordion(\'acc-' + currentIdx + '\')">' +
                                 '<div class="flex items-center gap-3">' +
-                                    '<div class="bg-red-100 w-9 h-9 flex justify-center items-center rounded-full text-samu-red flex-shrink-0">' +
+                                    '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
                                         '<i class="fas fa-user text-sm"></i>' +
                                     '</div>' +
                                     '<div class="truncate">' +
                                         '<h3 class="font-bold text-gray-800 uppercase text-sm truncate">' + grupo.nomeDisplay + '</h3>' +
-                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samu-red"></i> ' + setorInfo + '</p>' +
+                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setorInfo + '</p>' +
                                     '</div>' +
                                 '</div>' +
                                 '<div class="flex items-center gap-2 flex-shrink-0">' +
