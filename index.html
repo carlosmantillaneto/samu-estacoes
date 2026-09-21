@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard TI - SAMU</title>
+    <title>Controle Estações - SAMU Mogi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -20,11 +20,19 @@
 </head>
 <body class="bg-gray-100 min-h-screen font-sans">
     
-    <!-- Header -->
+    <!-- Header Modificado conforme solicitado -->
     <header class="bg-spdm-blue text-white shadow-md sticky top-0 z-40 border-b-4 border-spdm-green">
-        <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold"><i class="fas fa-users-cog mr-2"></i> Estações de Trabalho</h1>
-            <button class="bg-spdm-green hover:bg-green-700 px-3 py-1 rounded-md text-sm transition shadow" onclick="carregarDados()">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 p-2 rounded-lg border border-white/20 text-spdm-green flex items-center justify-center w-10 h-10 shadow-inner">
+                    <i class="fas fa-ambulance text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold leading-tight tracking-wide">Controle Estações</h1>
+                    <p class="text-[11px] text-gray-200 font-medium uppercase tracking-wider">SAMU Mogi</p>
+                </div>
+            </div>
+            <button class="bg-spdm-green hover:bg-green-700 px-3 py-1.5 rounded-md text-xs font-semibold transition shadow flex items-center gap-1.5" onclick="carregarDados()">
                 <i class="fas fa-sync-alt"></i> Atualizar
             </button>
         </div>
@@ -184,7 +192,6 @@
                             if(tipoStr.includes('nobreak')) icone = 'fa-car-battery';
                             if(tipoStr.includes('impressora')) icone = 'fa-print';
 
-                            // Cada informação no seu quadrado (cards detalhados)
                             htmlEquips += `
                                 <div class="bg-white p-3 border rounded-lg shadow-sm mb-3">
                                     <div class="flex justify-between items-center mb-2 pb-2 border-b">
@@ -287,8 +294,6 @@
                 tratarMudancaTipo();
             } else if (acao === 'editar') {
                 document.getElementById('titulo-modal').innerText = 'Editar Equipamento';
-                
-                // CORREÇÃO CRUCIAL: Conversão para String em ambos os lados para garantir correspondência exata do ID
                 const item = dadosGlobais.find(i => i['ID'].toString().trim() === id.toString().trim());
                 
                 if(item) {
