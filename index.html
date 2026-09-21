@@ -38,7 +38,7 @@
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
-    <!-- Botão Flutuante (Criar Novo Responsável/Estação) -->
+    <!-- Botão Flutuante (Criar Novo) -->
     <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-spdm-green text-white w-14 h-14 rounded-full shadow-lg hover:bg-green-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
         <i class="fas fa-user-plus"></i>
     </button>
@@ -52,7 +52,7 @@
             </div>
             
             <div class="overflow-y-auto p-4">
-                <form id="form-equipamento" class="space-y-4" onsubmit="salvarEquipamento(event)">
+                <form id="form-equipamento" class="space-y-3" onsubmit="salvarEquipamento(event)">
                     <input type="hidden" id="item-id">
                     <input type="hidden" id="item-acao" value="criar">
                     
@@ -61,13 +61,14 @@
                         <input type="text" id="responsavel" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required placeholder="Ex: RECEPÇÃO">
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Tipo de Item</label>
-                            <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" required>
+                            <select id="tipo" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" onchange="tratarMudancaTipo()" required>
                                 <option value="Computador">Computador</option>
                                 <option value="Monitor">Monitor</option>
                                 <option value="Nobreak">Nobreak</option>
+                                <option value="Impressora">Impressora</option>
                             </select>
                         </div>
                         <div>
@@ -81,18 +82,18 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Host / Patrimônio</label>
-                            <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Hostname</label>
+                            <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Serial Number</label>
-                            <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Patrimônio</label>
+                            <input type="text" id="patrimonio" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Marca</label>
                             <input type="text" id="marca" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
@@ -104,11 +105,35 @@
                     </div>
 
                     <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Serial Number</label>
+                        <input type="text" id="serial" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue">
+                    </div>
+
+                    <!-- Campos específicos para computadores/hardwares -->
+                    <div id="bloco-hardware" class="space-y-3 p-3 bg-gray-50 border rounded-md">
+                        <p class="text-xs font-bold text-spdm-blue uppercase"><i class="fas fa-microchip mr-1"></i> Especificações Técnicas</p>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Processador</label>
+                            <input type="text" id="processador" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: Intel Core i5 10th Gen">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Memória RAM</label>
+                                <input type="text" id="memoria" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: 8GB DDR4">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Armazenamento</label>
+                                <input type="text" id="armazenamento" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-spdm-blue" placeholder="Ex: SSD 240GB">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-1">Setor / Base</label>
                         <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-spdm-blue" required>
                     </div>
                     
-                    <button type="submit" id="btn-salvar" class="w-full bg-spdm-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-4">
+                    <button type="submit" id="btn-salvar" class="w-full bg-spdm-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-3">
                         Salvar Registro
                     </button>
                 </form>
@@ -137,7 +162,7 @@
                     const estacoes = {};
                     
                     dadosGlobais.forEach(item => {
-                        const respRaw = item['Responsável'] || 'SEM ATRIBUIÇÃO';
+                        const respRaw = item['Responsável'] || item['Responsavel'] || 'SEM ATRIBUIÇÃO';
                         const resp = respRaw.toUpperCase(); 
                         if (!estacoes[resp]) estacoes[resp] = { nomeDisplay: respRaw, itens: [] };
                         estacoes[resp].itens.push(item);
@@ -154,35 +179,33 @@
                                               eq['Status'] === 'Reserva' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800';
                             
                             let icone = 'fa-desktop';
-                            if(eq['Tipo'].toLowerCase().includes('monitor')) icone = 'fa-tv';
-                            if(eq['Tipo'].toLowerCase().includes('nobreak')) icone = 'fa-car-battery';
+                            let tipoStr = (eq['Tipo'] || '').toLowerCase();
+                            if(tipoStr.includes('monitor')) icone = 'fa-tv';
+                            if(tipoStr.includes('nobreak')) icone = 'fa-car-battery';
+                            if(tipoStr.includes('impressora')) icone = 'fa-print';
 
+                            // Visualização em linhas limpas conforme solicitado
                             htmlEquips += `
-                                <div class="bg-white p-3 border rounded-md shadow-sm mb-3">
-                                    <div class="flex justify-between items-start mb-2 pb-2 border-b border-gray-100">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas ${icone} text-gray-400"></i>
-                                            <span class="font-bold text-sm text-gray-800">${eq['Tipo']}</span>
+                                <div class="bg-white p-3 border rounded-md shadow-sm mb-2 flex items-center justify-between">
+                                    <div class="flex items-center gap-3 overflow-hidden">
+                                        <div class="bg-gray-100 p-2 rounded text-spdm-blue shrink-0">
+                                            <i class="fas ${icone} text-base"></i>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <span class="px-2 py-1 mr-1 rounded text-[10px] font-bold uppercase border ${statusColor}">
-                                                ${eq['Status']}
-                                            </span>
-                                            <!-- Botão Lápis (Editar) -->
-                                            <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
-                                                <i class="fas fa-edit text-base"></i>
-                                            </button>
-                                            <!-- Botão Lixeira (Deletar) -->
-                                            <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
-                                                <i class="fas fa-trash text-base"></i>
-                                            </button>
+                                        <div class="truncate text-xs">
+                                            <p class="font-bold text-gray-800 uppercase">${eq['Tipo']} - ${eq['Hostname'] || eq['Patrimonio'] || 'S/N'}</p>
+                                            <p class="text-gray-500 truncate">${eq['Marca'] || ''} ${eq['Modelo'] || ''} ${eq['Processador'] ? '| ' + eq['Processador'] : ''}</p>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                                        <p><span class="font-semibold">Host/Patrimônio:</span><br>${eq['Hostname'] || eq['Hostname/Identificação'] || '-'}</p>
-                                        <p><span class="font-semibold">Serial Number:</span><br>${eq['Serial Number'] || '-'}</p>
-                                        <p><span class="font-semibold">Marca:</span><br>${eq['Marca'] || '-'}</p>
-                                        <p><span class="font-semibold">Modelo:</span><br>${eq['Modelo'] || '-'}</p>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase ${statusColor}">
+                                            ${eq['Status']}
+                                        </span>
+                                        <button onclick="abrirModal('editar', '${eq['ID']}')" class="text-spdm-blue hover:bg-blue-50 p-1.5 rounded transition" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deletarEquipamento(event, '${eq['ID']}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                             `;
@@ -192,21 +215,19 @@
                             <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
                                 <div class="bg-gray-50 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition border-l-4 border-spdm-blue" onclick="toggleAccordion('acc-${index}')">
                                     <div class="flex items-center gap-3">
-                                        <div class="bg-blue-100 w-10 h-10 flex justify-center items-center rounded-full text-spdm-blue flex-shrink-0">
-                                            <i class="fas fa-user"></i>
+                                        <div class="bg-blue-100 w-9 h-9 flex justify-center items-center rounded-full text-spdm-blue flex-shrink-0">
+                                            <i class="fas fa-user text-sm"></i>
                                         </div>
                                         <div class="truncate">
                                             <h3 class="font-bold text-gray-800 uppercase text-sm truncate">${grupo.nomeDisplay}</h3>
-                                            <p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo}</p>
+                                            <p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt"></i> ${setorInfo} (${equipamentos.length} it.)</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
-                                        <!-- Botão Mais dentro do card do Responsável -->
-                                        <button onclick="event.stopPropagation(); abrirModal('criar', null, '${grupo.nomeDisplay}')" class="bg-spdm-green text-white w-7 h-7 rounded flex justify-center items-center hover:bg-green-700 transition" title="Adicionar item para este usuário">
-                                            <i class="fas fa-plus text-sm"></i>
+                                        <button onclick="event.stopPropagation(); abrirModal('criar', null, '${grupo.nomeDisplay}')" class="bg-spdm-green text-white w-7 h-7 rounded flex justify-center items-center hover:bg-green-700 transition" title="Adicionar item">
+                                            <i class="fas fa-plus text-xs"></i>
                                         </button>
-                                        <span class="bg-spdm-blue text-white text-[10px] font-bold px-2 py-1 rounded-full">${equipamentos.length}</span>
-                                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200" id="icon-${index}"></i>
+                                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-200 text-sm" id="icon-${index}"></i>
                                     </div>
                                 </div>
                                 <div id="acc-${index}" class="hidden p-3 bg-gray-100 border-t">
@@ -237,30 +258,49 @@
             }
         }
 
+        function tratarMudancaTipo() {
+            const tipo = document.getElementById('tipo').value;
+            const blocoHardware = document.getElementById('bloco-hardware');
+            // Se for monitor ou nobreak, esconde campos de processador/memória para manter limpo
+            if (tipo === 'Monitor' || tipo === 'Nobreak') {
+                blocoHardware.style.display = 'none';
+                document.getElementById('processador').value = '';
+                document.getElementById('memoria').value = '';
+                document.getElementById('armazenamento').value = '';
+            } else {
+                blocoHardware.style.display = 'block';
+            }
+        }
+
         function abrirModal(acao, id = null, responsavelPre = '') {
             document.getElementById('modal-cadastro').classList.remove('hidden');
             document.getElementById('item-acao').value = acao;
             
             if (acao === 'criar') {
-                document.getElementById('titulo-modal').innerText = 'Nova Estação / Equipamento';
+                document.getElementById('titulo-modal').innerText = 'Novo Equipamento';
                 document.getElementById('form-equipamento').reset();
                 document.getElementById('item-id').value = '';
-                // Se clicou no "+" de um usuário específico, já preenche o nome dele
                 document.getElementById('responsavel').value = responsavelPre;
+                tratarMudancaTipo();
             } else if (acao === 'editar') {
                 document.getElementById('titulo-modal').innerText = 'Editar Equipamento';
                 const item = dadosGlobais.find(i => i['ID'].toString() === id.toString());
                 
                 if(item) {
                     document.getElementById('item-id').value = item['ID'];
-                    document.getElementById('responsavel').value = item['Responsável'] || '';
+                    document.getElementById('responsavel').value = item['Responsável'] || item['Responsavel'] || '';
                     document.getElementById('tipo').value = item['Tipo'] || 'Computador';
-                    document.getElementById('hostname').value = item['Hostname'] || item['Hostname/Identificação'] || '';
+                    document.getElementById('hostname').value = item['Hostname'] || '';
+                    document.getElementById('patrimonio').value = item['Patrimonio'] || '';
                     document.getElementById('marca').value = item['Marca'] || '';
                     document.getElementById('modelo').value = item['Modelo'] || '';
                     document.getElementById('serial').value = item['Serial Number'] || '';
+                    document.getElementById('processador').value = item['Processador'] || '';
+                    document.getElementById('memoria').value = item['Memoria'] || '';
+                    document.getElementById('armazenamento').value = item['Armazenamento'] || '';
                     document.getElementById('setor').value = item['Setor'] || '';
                     document.getElementById('status').value = item['Status'] || 'Ativo';
+                    tratarMudancaTipo();
                 }
             }
         }
@@ -270,7 +310,8 @@
         }
 
         async function deletarEquipamento(event, id) {
-            if(!confirm("Tem certeza que deseja apagar este equipamento? Essa ação não pode ser desfeita.")) {
+            event.stopPropagation();
+            if(!confirm("Tem certeza que deseja apagar este equipamento permanentemente?")) {
                 return;
             }
             
@@ -303,9 +344,13 @@
                 responsavel: document.getElementById('responsavel').value.trim(),
                 tipo: document.getElementById('tipo').value,
                 hostname: document.getElementById('hostname').value.trim(),
+                patrimonio: document.getElementById('patrimonio').value.trim(),
                 marca: document.getElementById('marca').value.trim(),
                 modelo: document.getElementById('modelo').value.trim(),
                 serial: document.getElementById('serial').value.trim(),
+                processador: document.getElementById('processador').value.trim(),
+                memoria: document.getElementById('memoria').value.trim(),
+                armazenamento: document.getElementById('armazenamento').value.trim(),
                 setor: document.getElementById('setor').value.trim(),
                 status: document.getElementById('status').value
             };
