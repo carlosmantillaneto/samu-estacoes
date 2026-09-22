@@ -53,17 +53,11 @@
     <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[95vh] flex flex-col">
-            <div class="bg-samudark px-4 py-2 flex justify-between items-center text-white border-b-4 border-samudark shrink-0">
-                <div class="flex flex-col truncate pr-2">
-                    <h2 id="titulo-modal" class="font-bold text-sm tracking-wide uppercase truncate">ESTAÇÃO DE TRABALHO</h2>
-                    <p id="subtitulo-modal" class="text-[11px] text-gray-300 font-medium truncate mt-0.5"><i class="fas fa-map-marker-alt text-samured"></i> <span id="setor-modal">-</span></p>
-                </div>
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
-                    <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
-                    <button onclick="fecharModal()" class="text-white hover:text-samured ml-1"><i class="fas fa-times text-xl"></i></button>
-                </div>
+            <div class="bg-samudark px-3 py-1.5 flex justify-end items-center gap-2 text-white border-b-4 border-samudark shrink-0">
+                <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
+                <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
+                <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
+                <button onclick="fecharModal()" class="text-white hover:text-samured ml-1"><i class="fas fa-times text-xl"></i></button>
             </div>
             
             <div class="overflow-y-auto p-3 space-y-2.5">
@@ -257,7 +251,7 @@
                         var idItem = eq['ID'] || '';
                         
                         var cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
-                            '<div class="bg-gray-50 p-3.5 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
+                            '<div class="bg-gray-50 p-3.5 flex justify-between items-center border-l-4 border-samudark cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
                                 '<div class="flex items-center gap-3 truncate">' +
                                     '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
                                         '<i class="fas fa-user text-sm"></i>' +
@@ -295,8 +289,6 @@
             currentEditingId = id;
             
             if (acao === 'criar') {
-                document.getElementById('titulo-modal').innerText = 'NOVA ESTAÇÃO';
-                document.getElementById('setor-modal').innerText = '-';
                 document.getElementById('form-equipamento').reset();
                 document.getElementById('item-acao').value = 'criar';
                 document.getElementById('item-id').value = '';
@@ -320,38 +312,34 @@
                     backupDados = Object.assign({}, item);
                     
                     document.getElementById('item-id').value = item['ID'] || '';
-                    document.getElementById('responsavel').value = item['Responsavel'] || item['Responsável'] || '';
-                    document.getElementById('setor').value = item['Setor'] || '';
-                    document.getElementById('hostname').value = item['Hostname'] || '';
-                    document.getElementById('fabricante').value = item['Fabricante'] || '';
+                    document.getElementById('responsavel').value = capitalizar(item['Responsavel'] || item['Responsável'] || '');
+                    document.getElementById('setor').value = capitalizar(item['Setor'] || '');
+                    document.getElementById('hostname').value = (item['Hostname'] || '').toString().toUpperCase();
+                    document.getElementById('fabricante').value = capitalizar(item['Fabricante'] || '');
                     document.getElementById('modelo').value = item['Modelo'] || '';
-                    document.getElementById('serial').value = item['Serial Number'] || '';
-                    document.getElementById('patrimonio').value = item['Patrimonio'] || '';
-                    document.getElementById('cpu').value = item['CPU'] || '';
-                    document.getElementById('memoria').value = item['Memoria'] || '';
-                    document.getElementById('armazenamento').value = item['Armazenamento'] || '';
+                    document.getElementById('serial').value = (item['Serial Number'] || '').toString().toUpperCase();
+                    document.getElementById('patrimonio').value = capitalizar(item['Patrimonio'] || '');
+                    document.getElementById('cpu').value = capitalizar(item['CPU'] || '');
+                    document.getElementById('memoria').value = capitalizar(item['Memoria'] || '');
+                    document.getElementById('armazenamento').value = capitalizar(item['Armazenamento'] || '');
                     
-                    document.getElementById('fab1').value = item['Fabricante 1'] || '';
+                    document.getElementById('fab1').value = capitalizar(item['Fabricante 1'] || '');
                     document.getElementById('mod1').value = item['Modelo 1'] || '';
-                    document.getElementById('ser1').value = item['Serial 1'] || '';
-                    document.getElementById('pat1').value = item['Patrimonio 1'] || '';
+                    document.getElementById('ser1').value = (item['Serial 1'] || '').toString().toUpperCase();
+                    document.getElementById('pat1').value = capitalizar(item['Patrimonio 1'] || '');
 
-                    document.getElementById('fab2').value = item['Fabricante 2'] || '';
+                    document.getElementById('fab2').value = capitalizar(item['Fabricante 2'] || '');
                     document.getElementById('mod2').value = item['Modelo 2'] || '';
-                    document.getElementById('ser2').value = item['Serial 2'] || '';
-                    document.getElementById('pat2').value = item['Patrimonio 2'] || '';
+                    document.getElementById('ser2').value = (item['Serial 2'] || '').toString().toUpperCase();
+                    document.getElementById('pat2').value = capitalizar(item['Patrimonio 2'] || '');
 
                     document.getElementById('nobreak').value = item['Nobreak'] || '';
-                    document.getElementById('fabN').value = item['Fabricante N'] || '';
-                    document.getElementById('serN').value = item['Serial N'] || '';
-                    document.getElementById('patN').value = item['Patrimonio N'] || '';
+                    document.getElementById('fabN').value = capitalizar(item['Fabricante N'] || '');
+                    document.getElementById('serN').value = (item['Serial N'] || '').toString().toUpperCase();
+                    document.getElementById('patN').value = capitalizar(item['Patrimonio N'] || '');
 
                     verificarOcultarBloco('bloco-monitor2', item['Fabricante 2'], item['Modelo 2']);
                     verificarOcultarBloco('bloco-nobreak', item['Fabricante N'], item['Nobreak']);
-
-                    var nomeResp = capitalizar(item['Responsavel'] || item['Responsável'] || 'Estação');
-                    document.getElementById('titulo-modal').innerText = nomeResp.toUpperCase();
-                    document.getElementById('setor-modal').innerText = capitalizar(item['Setor'] || '-');
 
                     if (acao === 'visualizar') {
                         btnSalvar.style.display = 'none';
@@ -451,26 +439,26 @@
                 setor: capitalizar(document.getElementById('setor').value.trim()) || '-',
                 hostname: document.getElementById('hostname').value.trim().toUpperCase() || '-',
                 fabricante: capitalizar(document.getElementById('fabricante').value.trim()) || '-',
-                modelo: capitalizar(document.getElementById('modelo').value.trim()) || '-',
-                serial: document.getElementById('serial').value.trim() || '-',
-                patrimonio: document.getElementById('patrimonio').value.trim() || '-',
-                cpu: document.getElementById('cpu').value.trim() || '-',
-                memoria: document.getElementById('memoria').value.trim() || '-',
-                armazenamento: document.getElementById('armazenamento').value.trim() || '-',
+                modelo: document.getElementById('modelo').value.trim() || '-',
+                serial: document.getElementById('serial').value.trim().toUpperCase() || '-',
+                patrimonio: capitalizar(document.getElementById('patrimonio').value.trim()) || '-',
+                cpu: capitalizar(document.getElementById('cpu').value.trim()) || '-',
+                memoria: capitalizar(document.getElementById('memoria').value.trim()) || '-',
+                armazenamento: capitalizar(document.getElementById('armazenamento').value.trim()) || '-',
                 monitor1: '-',
                 fab1: capitalizar(document.getElementById('fab1').value.trim()) || '-',
-                mod1: capitalizar(document.getElementById('mod1').value.trim()) || '-',
-                ser1: document.getElementById('ser1').value.trim() || '-',
-                pat1: document.getElementById('pat1').value.trim() || '-',
+                mod1: document.getElementById('mod1').value.trim() || '-',
+                ser1: document.getElementById('ser1').value.trim().toUpperCase() || '-',
+                pat1: capitalizar(document.getElementById('pat1').value.trim()) || '-',
                 monitor2: '-',
                 fab2: capitalizar(document.getElementById('fab2').value.trim()) || '-',
-                mod2: capitalizar(document.getElementById('mod2').value.trim()) || '-',
-                ser2: document.getElementById('ser2').value.trim() || '-',
-                pat2: document.getElementById('pat2').value.trim() || '-',
-                nobreak: capitalizar(document.getElementById('nobreak').value.trim()) || '-',
+                mod2: document.getElementById('mod2').value.trim() || '-',
+                ser2: document.getElementById('ser2').value.trim().toUpperCase() || '-',
+                pat2: capitalizar(document.getElementById('pat2').value.trim()) || '-',
+                nobreak: document.getElementById('nobreak').value.trim() || '-',
                 fabN: capitalizar(document.getElementById('fabN').value.trim()) || '-',
-                serN: document.getElementById('serN').value.trim() || '-',
-                patN: document.getElementById('patN').value.trim() || '-'
+                serN: document.getElementById('serN').value.trim().toUpperCase() || '-',
+                patN: capitalizar(document.getElementById('patN').value.trim()) || '-'
             };
 
             try {
