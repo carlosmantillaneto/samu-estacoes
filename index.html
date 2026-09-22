@@ -54,7 +54,11 @@
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
             <div class="bg-samudark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samured shrink-0">
-                <h2 id="titulo-modal" class="font-bold text-sm truncate pr-2">Estação de Trabalho</h2>
+                <!-- Título customizado com Nome e Setor abaixo -->
+                <div class="flex flex-col truncate pr-2">
+                    <h2 id="titulo-modal" class="font-bold text-sm tracking-wide uppercase truncate">ESTAÇÃO DE TRABALHO</h2>
+                    <p id="subtitulo-modal" class="text-[11px] text-gray-300 font-medium truncate mt-0.5"><i class="fas fa-map-marker-alt text-samured"></i> <span id="setor-modal">-</span></p>
+                </div>
                 <!-- Botões de Ação, Descartar e Fechar -->
                 <div class="flex items-center gap-2 flex-shrink-0">
                     <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
@@ -68,17 +72,16 @@
                 <form id="form-equipamento" class="space-y-3" onsubmit="salvarEquipamento(event)">
                     <input type="hidden" id="item-id">
                     <input type="hidden" id="item-acao" value="criar">
-                    <input type="hidden" id="responsavel">
                     
-                    <!-- Hostname e Setor -->
+                    <!-- Responsável e Setor -->
                     <div class="grid grid-cols-2 gap-3 bg-samublue p-3 rounded border border-blue-100">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Hostname</label>
-                            <input type="text" id="hostname" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" placeholder="SAMU-01">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Responsável</label>
+                            <input type="text" id="responsavel" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" required placeholder="Marcelo" oninput="atualizarSubtituloModal()">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Setor</label>
-                            <input type="text" id="setor" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" required placeholder="Administração">
+                            <input type="text" id="setor" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" required placeholder="Administração" oninput="atualizarSubtituloModal()">
                         </div>
                     </div>
 
@@ -87,7 +90,11 @@
                         <div class="pb-1 border-b-2 border-samudark">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 pt-1">
+                        <div class="pt-1">
+                            <label class="block text-[11px] font-semibold text-gray-700">Hostname</label>
+                            <input type="text" id="hostname" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="SAMU-01">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Fabricante</label>
                                 <input type="text" id="fabricante" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
@@ -274,6 +281,13 @@
         var currentEditingId = null;
         var backupDados = {};
 
+        function atualizarSubtituloModal() {
+            var nome = document.getElementById('responsavel').value.trim() || 'ESTAÇÃO DE TRABALHO';
+            var setor = document.getElementById('setor').value.trim() || '-';
+            document.getElementById('titulo-modal').innerText = nome.toUpperCase();
+            document.getElementById('setor-modal').innerText = capitalizar(setor);
+        }
+
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
             var btnSalvar = document.getElementById('btn-salvar');
@@ -286,7 +300,8 @@
             currentEditingId = id;
             
             if (acao === 'criar') {
-                document.getElementById('titulo-modal').innerText = 'Nova Estação de Trabalho';
+                document.getElementById('titulo-modal').innerText = 'NOVA ESTAÇÃO DE TRABALHO';
+                document.getElementById('setor-modal').innerText = '-';
                 document.getElementById('form-equipamento').reset();
                 document.getElementById('item-acao').value = 'criar';
                 document.getElementById('item-id').value = '';
@@ -336,10 +351,9 @@
                     ocultarVazios('fab2', item['Fabricante 2'] || item['Modelo 2']);
                     ocultarVazios('fabN', item['Nobreak'] || item['Fabricante N']);
 
-                    var nomeResp = capitalizar(item['Responsavel'] || item['Responsável'] || 'Estação');
+                    atualizarSubtituloModal();
 
                     if (acao === 'visualizar') {
-                        document.getElementById('titulo-modal').innerText = nomeResp;
                         btnSalvar.style.display = 'none';
                         btnDescartarBaixo.style.display = 'none';
                         btnEditModal.classList.remove('hidden');
@@ -347,7 +361,6 @@
                         btnDescartarModal.classList.add('hidden');
                         inputs.forEach(i => i.disabled = true);
                     } else {
-                        document.getElementById('titulo-modal').innerText = 'Editar: ' + nomeResp;
                         document.getElementById('item-acao').value = 'editar';
                         btnSalvar.style.display = 'block';
                         btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
@@ -372,8 +385,6 @@
             var btnDescartarModal = document.getElementById('btn-descartar-modal');
             var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
             
-            var nomeResp = capitalizar(backupDados['Responsavel'] || backupDados['Responsável'] || 'Estação');
-            document.getElementById('titulo-modal').innerText = 'Editar: ' + nomeResp;
             document.getElementById('item-acao').value = 'editar';
             btnSalvar.style.display = 'block';
             btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
