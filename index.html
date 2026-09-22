@@ -21,7 +21,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header com a imagem do logo -->
+    <!-- Header Oficial SAMU -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
         <div class="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -49,7 +49,7 @@
         <i class="fas fa-plus"></i>
     </button>
 
-    <!-- Modal de Formulário -->
+    <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
             <div class="bg-samudark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samured shrink-0">
@@ -72,6 +72,12 @@
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Setor / Base</label>
                             <input type="text" id="setor" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" required placeholder="EX: ADMINISTRAÇÃO">
                         </div>
+                    </div>
+
+                    <!-- Hostname -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Hostname</label>
+                        <input type="text" id="hostname" class="w-full border rounded p-2 text-sm uppercase focus:ring-2 focus:ring-samured" placeholder="EX: SAMU-MOGI-01">
                     </div>
 
                     <!-- Computador Principal -->
@@ -122,15 +128,11 @@
                                 <input type="text" id="monitor1" class="w-full border rounded p-1.5 text-xs uppercase" placeholder="MONITOR 1">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-semibold text-gray-600">Fabricante</label>
-                                <input type="text" id="fab1" class="w-full border rounded p-1.5 text-xs uppercase" placeholder="-">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-semibold text-gray-600">Modelo</label>
+                                <label class="block text-[11px] font-semibold text-gray-600">Modelo</label>
                                 <input type="text" id="mod1" class="w-full border rounded p-1.5 text-xs uppercase" placeholder="-">
                             </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-600">Serial</label>
                                 <input type="text" id="ser1" class="w-full border rounded p-1.5 text-xs uppercase" placeholder="-">
@@ -226,70 +228,28 @@
                     dadosGlobais.forEach(function(eq, index) {
                         var resp = eq['Responsavel'] || eq['Responsável'] || 'SEM ATRIBUIÇÃO';
                         var setor = eq['Setor'] || '-';
+                        var hostname = eq['Hostname'] || '-';
                         var idItem = eq['ID'] || '';
                         var accId = 'acc-' + index;
                         var iconId = 'icon-' + index;
                         
                         var cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
-                            '<div class="bg-gray-50 p-3 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="toggleAccordion(\'' + accId + '\', \'' + iconId + '\')">' +
+                            '<div class="bg-gray-50 p-3 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
                                 '<div class="flex items-center gap-3 truncate">' +
                                     '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
                                         '<i class="fas fa-user text-sm"></i>' +
                                     '</div>' +
                                     '<div class="truncate">' +
                                         '<h3 class="font-bold text-gray-800 uppercase text-sm truncate">' + resp + '</h3>' +
-                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + '</p>' +
+                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + ' | <i class="fas fa-network-wired text-gray-400"></i> ' + hostname + '</p>' +
                                     '</div>' +
                                 '</div>' +
-                                '<div class="flex items-center gap-2 flex-shrink-0">' +
-                                    '<div class="flex items-center gap-1" onclick="event.stopPropagation();">' +
-                                        '<button onclick="abrirModal(\'editar\', \'' + idItem + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
-                                        '<button onclick="deletarEquipamento(event, \'' + idItem + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
-                                    '</div>' +
-                                    '<i class="fas fa-chevron-down text-gray-400 transition-transform duration-200 text-sm" id="' + iconId + '"></i>' +
+                                '<div class="flex items-center gap-2 flex-shrink-0" onclick="event.stopPropagation();">' +
+                                    '<button onclick="abrirModal(\'editar\', \'' + idItem + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
+                                    '<button onclick="deletarEquipamento(event, \'' + idItem + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
                                 '</div>' +
                             '</div>' +
-                            '<div id="' + accId + '" class="hidden p-3 bg-gray-50 border-t space-y-2 text-xs">' +
-                                '<div class="bg-white p-2 rounded border shadow-sm">' +
-                                    '<p class="font-bold text-samured mb-1 uppercase"><i class="fas fa-desktop mr-1"></i> ' + (eq['Fabricante'] || '-') + ' ' + (eq['Modelo'] || '') + '</p>' +
-                                    '<div class="grid grid-cols-3 gap-1 text-[11px] text-gray-600">' +
-                                        '<div><b>Serial:</b> ' + (eq['Serial Number'] || '-') + '</div>' +
-                                        '<div><b>Pat.:</b> ' + (eq['Patrimonio'] || '-') + '</div>' +
-                                        '<div><b>CPU/RAM:</b> ' + (eq['CPU'] || '-') + ' | ' + (eq['Memoria'] || '-') + '</div>' +
-                                    '</div>' +
-                                '</div>';
-
-                        if (eq['Monitor 1'] && eq['Monitor 1'] !== '-') {
-                            cardHTML += '<div class="bg-white p-2 rounded border shadow-sm">' +
-                                '<p class="font-bold text-gray-700 mb-1 uppercase"><i class="fas fa-tv mr-1 text-samured"></i> ' + eq['Monitor 1'] + ' (' + (eq['Fabricante 1'] || '-') + ' ' + (eq['Modelo 1'] || '') + ')</p>' +
-                                '<div class="grid grid-cols-2 gap-1 text-[11px] text-gray-600">' +
-                                    '<div><b>Serial:</b> ' + (eq['Serial 1'] || '-') + '</div>' +
-                                    '<div><b>Pat.:</b> ' + (eq['Patrimonio 1'] || '-') + '</div>' +
-                                '</div>' +
-                            '</div>';
-                        }
-
-                        if (eq['Monitor 2'] && eq['Monitor 2'] !== '-') {
-                            cardHTML += '<div class="bg-white p-2 rounded border shadow-sm">' +
-                                '<p class="font-bold text-gray-700 mb-1 uppercase"><i class="fas fa-tv mr-1 text-samured"></i> ' + eq['Monitor 2'] + ' (' + (eq['Fabricante 2'] || '-') + ' ' + (eq['Modelo 2'] || '') + ')</p>' +
-                                '<div class="grid grid-cols-2 gap-1 text-[11px] text-gray-600">' +
-                                    '<div><b>Serial:</b> ' + (eq['Serial 2'] || '-') + '</div>' +
-                                    '<div><b>Pat.:</b> ' + (eq['Patrimonio 2'] || '-') + '</div>' +
-                                '</div>' +
-                            '</div>';
-                        }
-
-                        if (eq['Nobreak'] && eq['Nobreak'] !== '-') {
-                            cardHTML += '<div class="bg-white p-2 rounded border shadow-sm">' +
-                                '<p class="font-bold text-gray-700 mb-1 uppercase"><i class="fas fa-car-battery mr-1 text-samured"></i> ' + eq['Nobreak'] + ' (' + (eq['Fabricante N'] || '-') + ')</p>' +
-                                '<div class="grid grid-cols-2 gap-1 text-[11px] text-gray-600">' +
-                                    '<div><b>Serial:</b> ' + (eq['Serial N'] || '-') + '</div>' +
-                                    '<div><b>Pat.:</b> ' + (eq['Patrimonio N'] || '-') + '</div>' +
-                                '</div>' +
-                            '</div>';
-                        }
-
-                        cardHTML += '</div></div>';
+                        '</div>';
                         lista.innerHTML += cardHTML;
                     });
 
@@ -301,34 +261,26 @@
             }
         }
 
-        function toggleAccordion(accId, iconId) {
-            var element = document.getElementById(accId);
-            var icon = document.getElementById(iconId);
-            if (element.classList.contains('hidden')) {
-                element.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                element.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
-            document.getElementById('item-acao').value = acao;
+            var btnSalvar = document.getElementById('btn-salvar');
+            var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
             
             if (acao === 'criar') {
                 document.getElementById('titulo-modal').innerText = 'Nova Estação de Trabalho';
                 document.getElementById('form-equipamento').reset();
+                document.getElementById('item-acao').value = 'criar';
                 document.getElementById('item-id').value = '';
-            } else if (acao === 'editar') {
-                document.getElementById('titulo-modal').innerText = 'Editar Estação';
+                btnSalvar.style.display = 'block';
+                inputs.forEach(i => i.disabled = false);
+            } else {
                 var item = dadosGlobais.find(function(i) { return i['ID'].toString().trim() === id.toString().trim(); });
                 
                 if(item) {
                     document.getElementById('item-id').value = item['ID'] || '';
                     document.getElementById('responsavel').value = item['Responsavel'] || item['Responsável'] || '';
                     document.getElementById('setor').value = item['Setor'] || '';
+                    document.getElementById('hostname').value = item['Hostname'] || '';
                     document.getElementById('fabricante').value = item['Fabricante'] || '';
                     document.getElementById('modelo').value = item['Modelo'] || '';
                     document.getElementById('serial').value = item['Serial Number'] || '';
@@ -338,7 +290,6 @@
                     document.getElementById('armazenamento').value = item['Armazenamento'] || '';
                     
                     document.getElementById('monitor1').value = item['Monitor 1'] || '';
-                    document.getElementById('fab1').value = item['Fabricante 1'] || '';
                     document.getElementById('mod1').value = item['Modelo 1'] || '';
                     document.getElementById('ser1').value = item['Serial 1'] || '';
                     document.getElementById('pat1').value = item['Patrimonio 1'] || '';
@@ -353,9 +304,35 @@
                     document.getElementById('fabN').value = item['Fabricante N'] || '';
                     document.getElementById('serN').value = item['Serial N'] || '';
                     document.getElementById('patN').value = item['Patrimonio N'] || '';
+
+                    // Condicionais para itens opcionais vazios
+                    ocultarVazios('monitor2', item['Monitor 2']);
+                    ocultarVazios('nobreak', item['Nobreak']);
+
+                    if (acao === 'visualizar') {
+                        document.getElementById('titulo-modal').innerText = 'Visualizar Estação (Somente Leitura)';
+                        btnSalvar.style.display = 'none';
+                        inputs.forEach(i => i.disabled = true);
+                    } else {
+                        document.getElementById('titulo-modal').innerText = 'Editar Estação';
+                        document.getElementById('item-acao').value = 'editar';
+                        btnSalvar.style.display = 'block';
+                        inputs.forEach(i => i.disabled = false);
+                    }
                 } else {
                     alert("Erro: Item não encontrado.");
                     fecharModal();
+                }
+            }
+        }
+
+        function ocultarVazios(elId, valor) {
+            var el = document.getElementById(elId).closest('.p-3');
+            if (el) {
+                if (!valor || valor.trim() === '' || valor.trim() === '-') {
+                    el.style.display = 'none';
+                } else {
+                    el.style.display = 'block';
                 }
             }
         }
@@ -398,6 +375,7 @@
                 id: document.getElementById('item-id').value,
                 responsavel: document.getElementById('responsavel').value.trim() || '-',
                 setor: document.getElementById('setor').value.trim() || '-',
+                hostname: document.getElementById('hostname').value.trim() || '-',
                 fabricante: document.getElementById('fabricante').value.trim() || '-',
                 modelo: document.getElementById('modelo').value.trim() || '-',
                 serial: document.getElementById('serial').value.trim() || '-',
@@ -406,7 +384,6 @@
                 memoria: document.getElementById('memoria').value.trim() || '-',
                 armazenamento: document.getElementById('armazenamento').value.trim() || '-',
                 monitor1: document.getElementById('monitor1').value.trim() || '-',
-                fab1: document.getElementById('fab1').value.trim() || '-',
                 mod1: document.getElementById('mod1').value.trim() || '-',
                 ser1: document.getElementById('ser1').value.trim() || '-',
                 pat1: document.getElementById('pat1').value.trim() || '-',
