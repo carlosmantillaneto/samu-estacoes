@@ -22,7 +22,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU Limpo (Sem selo Mogi) -->
+    <!-- Header Oficial SAMU Limpo -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -54,12 +54,13 @@
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
             <div class="bg-samudark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samured shrink-0">
-                <h2 id="titulo-modal" class="font-bold text-sm">Estação de Trabalho</h2>
-                <!-- Botões de Ação e Fechar -->
-                <div class="flex items-center gap-2">
+                <h2 id="titulo-modal" class="font-bold text-sm truncate pr-2">Estação de Trabalho</h2>
+                <!-- Botões de Ação, Descartar e Fechar -->
+                <div class="flex items-center gap-2 flex-shrink-0">
                     <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
                     <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
-                    <button onclick="fecharModal()" class="text-white hover:text-gray-200 ml-2"><i class="fas fa-times text-xl"></i></button>
+                    <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
+                    <button onclick="fecharModal()" class="text-white hover:text-gray-200 ml-1"><i class="fas fa-times text-xl"></i></button>
                 </div>
             </div>
             
@@ -67,44 +68,43 @@
                 <form id="form-equipamento" class="space-y-3" onsubmit="salvarEquipamento(event)">
                     <input type="hidden" id="item-id">
                     <input type="hidden" id="item-acao" value="criar">
+                    <input type="hidden" id="responsavel">
                     
-                    <!-- Responsável e Setor -->
+                    <!-- Hostname e Setor -->
                     <div class="grid grid-cols-2 gap-3 bg-samublue p-3 rounded border border-blue-100">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Responsável</label>
-                            <input type="text" id="responsavel" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-gray-500" required placeholder="Marcelo">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Hostname</label>
+                            <input type="text" id="hostname" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" placeholder="SAMU-01">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Setor / Base</label>
-                            <input type="text" id="setor" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-gray-500" required placeholder="Administração">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Setor</label>
+                            <input type="text" id="setor" class="w-full border border-gray-300 rounded p-2 text-sm uppercase focus:outline-none focus:border-gray-500" required placeholder="Administração">
                         </div>
                     </div>
 
-                    <!-- Computador & Hostname -->
+                    <!-- Computador -->
                     <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
-                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
-                        <div>
-                            <label class="block text-[11px] font-semibold text-gray-700">Hostname</label>
-                            <input type="text" id="hostname" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="Samu-Mogi-01">
+                        <div class="pb-1 border-b-2 border-samudark">
+                            <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-2 gap-2 pt-1">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Fabricante</label>
-                                <input type="text" id="fabricante" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="fabricante" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Modelo</label>
-                                <input type="text" id="modelo" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="modelo" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Serial Number</label>
-                                <input type="text" id="serial" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="serial" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Patrimônio</label>
-                                <input type="text" id="patrimonio" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="patrimonio" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-2">
@@ -114,97 +114,104 @@
                             </div>
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Memória</label>
-                                <input type="text" id="memoria" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="8gb">
+                                <input type="text" id="memoria" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="8GB">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Armazenamento</label>
-                                <input type="text" id="armazenamento" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="Ssd 240">
+                                <input type="text" id="armazenamento" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="SSD 240">
                             </div>
                         </div>
                     </div>
 
                     <!-- Monitor -->
                     <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
-                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor</p>
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="pb-1 border-b-2 border-samudark">
+                            <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
                             <div>
-                                <label class="block text-[11px] font-semibold text-gray-700">Identificação</label>
-                                <input type="text" id="monitor1" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="Monitor 1">
+                                <label class="block text-[11px] font-semibold text-gray-700">Fabricante</label>
+                                <input type="text" id="fab1" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Modelo</label>
-                                <input type="text" id="mod1" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="mod1" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Serial</label>
-                                <input type="text" id="ser1" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="ser1" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Patrimônio</label>
-                                <input type="text" id="pat1" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="pat1" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                     </div>
 
                     <!-- Monitor Secundário -->
                     <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
-                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[11px] font-semibold text-gray-700">Identificação</label>
-                                <input type="text" id="monitor2" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
-                            </div>
+                        <div class="pb-1 border-b-2 border-samudark">
+                            <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Fabricante</label>
-                                <input type="text" id="fab2" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="fab2" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-700">Modelo</label>
+                                <input type="text" id="mod2" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-semibold text-gray-700">Modelo</label>
-                                <input type="text" id="mod2" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
-                            </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Serial</label>
-                                <input type="text" id="ser2" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="ser2" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-semibold text-gray-700">Patrimônio</label>
-                                <input type="text" id="pat2" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="pat2" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                     </div>
 
                     <!-- Nobreak -->
                     <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
-                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Nobreak</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[11px] font-semibold text-gray-700">Nobreak</label>
-                                <input type="text" id="nobreak" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="Nobreak">
-                            </div>
+                        <div class="pb-1 border-b-2 border-samudark">
+                            <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Nobreak</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Fabricante</label>
-                                <input type="text" id="fabN" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <input type="text" id="fabN" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-700">Modelo</label>
+                                <input type="text" id="nobreak" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="block text-[11px] font-semibold text-gray-700">Serial</label>
-                                <input type="text" id="serN" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <label class="block text-[10px] font-semibold text-gray-700">Serial</label>
+                                <input type="text" id="serN" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-semibold text-gray-700">Patrimônio</label>
-                                <input type="text" id="patN" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500" placeholder="-">
+                                <label class="block text-[10px] font-semibold text-gray-700">Patrimônio</label>
+                                <input type="text" id="patN" class="w-full border border-gray-300 rounded p-1.5 text-xs uppercase focus:outline-none focus:border-gray-500" placeholder="-">
                             </div>
                         </div>
                     </div>
                     
-                    <button type="submit" id="btn-salvar" class="w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition flex justify-center items-center mt-3 shadow">
-                        Salvar
-                    </button>
+                    <div class="flex gap-2 mt-3">
+                        <button type="button" onclick="descartarEdicao()" id="btn-descartar-baixo" class="w-1/2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition shadow hidden">
+                            Descartar
+                        </button>
+                        <button type="submit" id="btn-salvar" class="w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow">
+                            Salvar
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -265,12 +272,15 @@
         }
 
         var currentEditingId = null;
+        var backupDados = {};
 
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
             var btnSalvar = document.getElementById('btn-salvar');
+            var btnDescartarBaixo = document.getElementById('btn-descartar-baixo');
             var btnEditModal = document.getElementById('btn-edit-modal');
             var btnDelModal = document.getElementById('btn-del-modal');
+            var btnDescartarModal = document.getElementById('btn-descartar-modal');
             var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
             
             currentEditingId = id;
@@ -281,16 +291,21 @@
                 document.getElementById('item-acao').value = 'criar';
                 document.getElementById('item-id').value = '';
                 btnSalvar.style.display = 'block';
+                btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+                btnDescartarBaixo.style.display = 'none';
                 btnEditModal.classList.add('hidden');
                 btnDelModal.classList.add('hidden');
+                btnDescartarModal.classList.add('hidden');
                 inputs.forEach(i => i.disabled = false);
                 
-                document.getElementById('monitor2').closest('.p-3').style.display = 'block';
-                document.getElementById('nobreak').closest('.p-3').style.display = 'block';
+                document.getElementById('fab2').closest('.p-3').style.display = 'block';
+                document.getElementById('fabN').closest('.p-3').style.display = 'block';
             } else {
                 var item = dadosGlobais.find(function(i) { return i['ID'].toString().trim() === id.toString().trim(); });
                 
                 if(item) {
+                    backupDados = Object.assign({}, item);
+                    
                     document.getElementById('item-id').value = item['ID'] || '';
                     document.getElementById('responsavel').value = item['Responsavel'] || item['Responsável'] || '';
                     document.getElementById('setor').value = item['Setor'] || '';
@@ -303,12 +318,11 @@
                     document.getElementById('memoria').value = item['Memoria'] || '';
                     document.getElementById('armazenamento').value = item['Armazenamento'] || '';
                     
-                    document.getElementById('monitor1').value = item['Monitor 1'] || '';
+                    document.getElementById('fab1').value = item['Fabricante 1'] || '';
                     document.getElementById('mod1').value = item['Modelo 1'] || '';
                     document.getElementById('ser1').value = item['Serial 1'] || '';
                     document.getElementById('pat1').value = item['Patrimonio 1'] || '';
 
-                    document.getElementById('monitor2').value = item['Monitor 2'] || '';
                     document.getElementById('fab2').value = item['Fabricante 2'] || '';
                     document.getElementById('mod2').value = item['Modelo 2'] || '';
                     document.getElementById('ser2').value = item['Serial 2'] || '';
@@ -319,21 +333,28 @@
                     document.getElementById('serN').value = item['Serial N'] || '';
                     document.getElementById('patN').value = item['Patrimonio N'] || '';
 
-                    ocultarVazios('monitor2', item['Monitor 2']);
-                    ocultarVazios('nobreak', item['Nobreak']);
+                    ocultarVazios('fab2', item['Fabricante 2'] || item['Modelo 2']);
+                    ocultarVazios('fabN', item['Nobreak'] || item['Fabricante N']);
+
+                    var nomeResp = capitalizar(item['Responsavel'] || item['Responsável'] || 'Estação');
 
                     if (acao === 'visualizar') {
-                        document.getElementById('titulo-modal').innerText = 'Visualização';
+                        document.getElementById('titulo-modal').innerText = nomeResp;
                         btnSalvar.style.display = 'none';
+                        btnDescartarBaixo.style.display = 'none';
                         btnEditModal.classList.remove('hidden');
                         btnDelModal.classList.remove('hidden');
+                        btnDescartarModal.classList.add('hidden');
                         inputs.forEach(i => i.disabled = true);
                     } else {
-                        document.getElementById('titulo-modal').innerText = 'Editar Estação';
+                        document.getElementById('titulo-modal').innerText = 'Editar: ' + nomeResp;
                         document.getElementById('item-acao').value = 'editar';
                         btnSalvar.style.display = 'block';
+                        btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+                        btnDescartarBaixo.style.display = 'block';
                         btnEditModal.classList.add('hidden');
                         btnDelModal.classList.add('hidden');
+                        btnDescartarModal.classList.remove('hidden');
                         inputs.forEach(i => i.disabled = false);
                     }
                 } else {
@@ -345,19 +366,33 @@
 
         function mudarParaEdicao() {
             var btnSalvar = document.getElementById('btn-salvar');
+            var btnDescartarBaixo = document.getElementById('btn-descartar-baixo');
             var btnEditModal = document.getElementById('btn-edit-modal');
             var btnDelModal = document.getElementById('btn-del-modal');
+            var btnDescartarModal = document.getElementById('btn-descartar-modal');
             var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
             
-            document.getElementById('titulo-modal').innerText = 'Editar Estação';
+            var nomeResp = capitalizar(backupDados['Responsavel'] || backupDados['Responsável'] || 'Estação');
+            document.getElementById('titulo-modal').innerText = 'Editar: ' + nomeResp;
             document.getElementById('item-acao').value = 'editar';
             btnSalvar.style.display = 'block';
+            btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+            btnDescartarBaixo.style.display = 'block';
             btnEditModal.classList.add('hidden');
             btnDelModal.classList.add('hidden');
+            btnDescartarModal.classList.remove('hidden');
             inputs.forEach(i => i.disabled = false);
             
-            document.getElementById('monitor2').closest('.p-3').style.display = 'block';
-            document.getElementById('nobreak').closest('.p-3').style.display = 'block';
+            document.getElementById('fab2').closest('.p-3').style.display = 'block';
+            document.getElementById('fabN').closest('.p-3').style.display = 'block';
+        }
+
+        function descartarEdicao() {
+            if(currentEditingId) {
+                abrirModal('visualizar', currentEditingId);
+            } else {
+                fecharModal();
+            }
         }
 
         function ocultarVazios(elId, valor) {
@@ -411,11 +446,12 @@
                 cpu: document.getElementById('cpu').value.trim() || '-',
                 memoria: document.getElementById('memoria').value.trim() || '-',
                 armazenamento: document.getElementById('armazenamento').value.trim() || '-',
-                monitor1: capitalizar(document.getElementById('monitor1').value.trim()) || '-',
+                monitor1: '-',
+                fab1: capitalizar(document.getElementById('fab1').value.trim()) || '-',
                 mod1: capitalizar(document.getElementById('mod1').value.trim()) || '-',
                 ser1: document.getElementById('ser1').value.trim() || '-',
                 pat1: document.getElementById('pat1').value.trim() || '-',
-                monitor2: capitalizar(document.getElementById('monitor2').value.trim()) || '-',
+                monitor2: '-',
                 fab2: capitalizar(document.getElementById('fab2').value.trim()) || '-',
                 mod2: capitalizar(document.getElementById('mod2').value.trim()) || '-',
                 ser2: document.getElementById('ser2').value.trim() || '-',
