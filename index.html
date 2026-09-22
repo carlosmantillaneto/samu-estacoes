@@ -21,17 +21,12 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU com Logo Estrela da Vida -->
+    <!-- Header com a sua imagem exata do logo -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
-        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="bg-samured text-white p-1 rounded flex items-center justify-center w-10 h-10 shadow">
-                    <!-- Símbolo Estrela da Vida exato conforme anexo -->
-                    <svg viewBox="0 0 100 100" class="w-8 h-8 fill-current text-white">
-                        <path d="M50 0 L62 30 L95 20 L75 50 L95 80 L62 70 L50 100 L38 70 L5 80 L25 50 L5 20 L38 30 Z" fill="#E30613" stroke="#fff" stroke-width="4"/>
-                        <path d="M50 25 C45 25 43 35 40 40 C37 45 30 48 30 55 C30 62 38 65 45 60 L45 80 L55 80 L55 60 C62 65 70 62 70 55 C70 48 63 45 60 40 C57 35 55 25 50 25 Z" fill="#fff"/>
-                        <path d="M45 42 Q50 35 55 42 Q52 50 48 55 Q43 50 45 42" fill="#E30613"/>
-                    </svg>
+                <div class="w-10 h-10 rounded overflow-hidden shadow border border-gray-200 bg-white flex items-center justify-center">
+                    <img src="logo-samu.jpg" alt="Logo SAMU" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h1 class="text-base font-bold leading-tight tracking-wide text-samudark">SAMU</h1>
@@ -228,7 +223,7 @@
                 if (result.status === "success") {
                     dadosGlobais = result.data;
                     
-                    dadosGlobais.forEach((eq, index) => {
+                    dadosGlobais.forEach((eq) => {
                         const resp = eq['Responsavel'] || eq['Responsável'] || 'SEM ATRIBUIÇÃO';
                         const setor = eq['Setor'] || '-';
                         
@@ -401,7 +396,7 @@
                 ser1: document.getElementById('ser1').value.trim() || '-',
                 pat1: document.getElementById('pat1').value.trim() || '-',
                 monitor2: document.getElementById('monitor2').value.trim() || '-',
-                fab2: document.getElementById('fab2').value.trim() || '-',
+                fab2: document.getElementById('fab2'].value.trim() || '-',
                 mod2: document.getElementById('mod2').value.trim() || '-',
                 ser2: document.getElementById('ser2').value.trim() || '-',
                 pat2: document.getElementById('pat2').value.trim() || '-',
