@@ -21,7 +21,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header com a sua imagem exata do logo -->
+    <!-- Header com a imagem do logo -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
         <div class="max-w-md mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -223,14 +223,16 @@
                 if (result.status === "success") {
                     dadosGlobais = result.data;
                     
-                    dadosGlobais.forEach(function(eq) {
+                    dadosGlobais.forEach(function(eq, index) {
                         var resp = eq['Responsavel'] || eq['Responsável'] || 'SEM ATRIBUIÇÃO';
                         var setor = eq['Setor'] || '-';
                         var idItem = eq['ID'] || '';
+                        var accId = 'acc-' + index;
+                        var iconId = 'icon-' + index;
                         
                         var cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
-                            '<div class="bg-gray-50 p-3 flex justify-between items-center border-l-4 border-samured">' +
-                                '<div class="flex items-center gap-3">' +
+                            '<div class="bg-gray-50 p-3 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="toggleAccordion(\'' + accId + '\', \'' + iconId + '\')">' +
+                                '<div class="flex items-center gap-3 truncate">' +
                                     '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
                                         '<i class="fas fa-user text-sm"></i>' +
                                     '</div>' +
@@ -239,12 +241,15 @@
                                         '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + '</p>' +
                                     '</div>' +
                                 '</div>' +
-                                '<div class="flex items-center gap-1">' +
-                                    '<button onclick="abrirModal(\'editar\', \'' + idItem + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
-                                    '<button onclick="deletarEquipamento(event, \'' + idItem + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
+                                '<div class="flex items-center gap-2 flex-shrink-0">' +
+                                    '<div class="flex items-center gap-1" onclick="event.stopPropagation();">' +
+                                        '<button onclick="abrirModal(\'editar\', \'' + idItem + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
+                                        '<button onclick="deletarEquipamento(event, \'' + idItem + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
+                                    '</div>' +
+                                    '<i class="fas fa-chevron-down text-gray-400 transition-transform duration-200 text-sm" id="' + iconId + '"></i>' +
                                 '</div>' +
                             '</div>' +
-                            '<div class="p-3 bg-gray-50 border-t space-y-2 text-xs">' +
+                            '<div id="' + accId + '" class="hidden p-3 bg-gray-50 border-t space-y-2 text-xs">' +
                                 '<div class="bg-white p-2 rounded border shadow-sm">' +
                                     '<p class="font-bold text-samured mb-1 uppercase"><i class="fas fa-desktop mr-1"></i> ' + (eq['Fabricante'] || '-') + ' ' + (eq['Modelo'] || '') + '</p>' +
                                     '<div class="grid grid-cols-3 gap-1 text-[11px] text-gray-600">' +
@@ -293,6 +298,18 @@
                 }
             } catch (error) {
                 loading.innerHTML = '<p class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Falha ao carregar os dados.</p>';
+            }
+        }
+
+        function toggleAccordion(accId, iconId) {
+            var element = document.getElementById(accId);
+            var icon = document.getElementById(iconId);
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                element.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
             }
         }
 
