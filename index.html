@@ -12,8 +12,8 @@
                 extend: { 
                     colors: { 
                         samured: '#E30613',
-                        samudark: '#1A1A1A',
-                        samuorange: '#FFF4EE'
+                        samudark: '#0A2540',
+                        samublue: '#F0F6FB'
                     } 
                 } 
             } 
@@ -22,14 +22,21 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU Centralizado -->
+    <!-- Header Oficial SAMU Restaurado -->
     <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
-        <div class="max-w-md mx-auto px-4 py-3 flex flex-col items-center justify-center text-center">
-            <div class="w-10 h-10 rounded overflow-hidden shadow border border-gray-200 bg-white flex items-center justify-center mb-1">
-                <img src="logo-samu.jpg" alt="Logo SAMU" class="w-full h-full object-contain">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded overflow-hidden shadow border border-gray-200 bg-white flex items-center justify-center">
+                    <img src="logo-samu.jpg" alt="Logo SAMU" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h1 class="text-base font-bold leading-tight tracking-wide text-samudark">SAMU <span class="text-samured">192</span></h1>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Controle de Estações TI</p>
+                </div>
             </div>
-            <h1 class="text-base font-bold leading-tight tracking-wide text-samudark">SAMU - Mogi das Cruzes</h1>
-            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Estações de Trabalho</p>
+            <div class="bg-red-50 border border-red-200 px-2.5 py-1 rounded text-[10px] font-bold text-samured uppercase">
+                MOGI
+            </div>
         </div>
     </header>
 
@@ -50,8 +57,13 @@
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
             <div class="bg-samudark px-4 py-3 flex justify-between items-center text-white border-b-4 border-samured shrink-0">
-                <h2 id="titulo-modal" class="font-bold text-sm">Nova Estação de Trabalho</h2>
-                <button onclick="fecharModal()" class="text-white hover:text-gray-200"><i class="fas fa-times text-xl"></i></button>
+                <h2 id="titulo-modal" class="font-bold text-sm">Estação de Trabalho</h2>
+                <!-- Botões de Ação e Fechar reposicionados aqui -->
+                <div class="flex items-center gap-2">
+                    <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
+                    <button onclick="fecharModal()" class="text-white hover:text-gray-200 ml-2"><i class="fas fa-times text-xl"></i></button>
+                </div>
             </div>
             
             <div class="overflow-y-auto p-4 space-y-4">
@@ -60,7 +72,7 @@
                     <input type="hidden" id="item-acao" value="criar">
                     
                     <!-- Responsável e Setor -->
-                    <div class="grid grid-cols-2 gap-3 bg-samuorange p-3 rounded border border-orange-200">
+                    <div class="grid grid-cols-2 gap-3 bg-samublue p-3 rounded border border-blue-100">
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Responsável</label>
                             <input type="text" id="responsavel" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-gray-500" required placeholder="Marcelo">
@@ -72,7 +84,7 @@
                     </div>
 
                     <!-- Computador & Hostname -->
-                    <div class="p-3 bg-samuorange border border-orange-200 rounded-md space-y-2">
+                    <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
                         <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
                         <div>
                             <label class="block text-[11px] font-semibold text-gray-700">Hostname</label>
@@ -115,7 +127,7 @@
                     </div>
 
                     <!-- Monitor -->
-                    <div class="p-3 bg-samuorange border border-orange-200 rounded-md space-y-2">
+                    <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
                         <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor</p>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -140,8 +152,8 @@
                     </div>
 
                     <!-- Monitor Secundário -->
-                    <div class="p-3 bg-samuorange border border-orange-200 rounded-md space-y-2">
-                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário (Opcional)</p>
+                    <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
+                        <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário</p>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[11px] font-semibold text-gray-700">Identificação</label>
@@ -169,7 +181,7 @@
                     </div>
 
                     <!-- Nobreak -->
-                    <div class="p-3 bg-samuorange border border-orange-200 rounded-md space-y-2">
+                    <div class="p-3 bg-samublue border border-blue-100 rounded-md space-y-2">
                         <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Nobreak</p>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -205,7 +217,6 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxoAeIrAI-gtmFWD9b6dT0fzfp7kVas-mfUxKtN9ChDbLkftGLEMtVQPs6bJ7xq6p2o/exec";
         let dadosGlobais = [];
 
-        // Função para formatar texto deixando apenas a primeira letra de cada palavra em maiúsculo
         function capitalizar(str) {
             if (!str || str === '-') return '-';
             return str.toLowerCase().replace(/(^|\s)\S/g, function(L) { return L.toUpperCase(); });
@@ -226,27 +237,24 @@
                 if (result.status === "success") {
                     dadosGlobais = result.data;
                     
-                    dadosGlobais.forEach(function(eq, index) {
+                    dadosGlobais.forEach(function(eq) {
                         var resp = capitalizar(eq['Responsavel'] || eq['Responsável'] || 'Sem Atribuição');
                         var setor = capitalizar(eq['Setor'] || '-');
-                        var hostname = capitalizar(eq['Hostname'] || '-');
                         var idItem = eq['ID'] || '';
                         
+                        // Card principal limpo: apenas nome em preto e setor abaixo em cinza claro com pino vermelho
                         var cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
-                            '<div class="bg-gray-50 p-3 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
+                            '<div class="bg-gray-50 p-3.5 flex justify-between items-center border-l-4 border-samured cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
                                 '<div class="flex items-center gap-3 truncate">' +
                                     '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
                                         '<i class="fas fa-user text-sm"></i>' +
                                     '</div>' +
                                     '<div class="truncate">' +
-                                        '<h3 class="font-bold text-gray-800 uppercase text-sm truncate">' + resp + '</h3>' +
-                                        '<p class="text-[11px] text-gray-500 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + ' | <i class="fas fa-network-wired text-gray-400"></i> ' + hostname + '</p>' +
+                                        '<h3 class="font-bold text-black uppercase text-sm truncate">' + resp + '</h3>' +
+                                        '<p class="text-[11px] text-gray-400 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + '</p>' +
                                     '</div>' +
                                 '</div>' +
-                                '<div class="flex items-center gap-2 flex-shrink-0" onclick="event.stopPropagation();">' +
-                                    '<button onclick="abrirModal(\'editar\', \'' + idItem + '\')" class="text-samured hover:bg-red-50 p-1.5 rounded transition" title="Editar"><i class="fas fa-edit"></i></button>' +
-                                    '<button onclick="deletarEquipamento(event, \'' + idItem + '\')" class="text-gray-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded transition" title="Excluir"><i class="fas fa-trash"></i></button>' +
-                                '</div>' +
+                                '<div class="text-gray-400 text-sm"><i class="fas fa-chevron-right"></i></div>' +
                             '</div>' +
                         '</div>';
                         lista.innerHTML += cardHTML;
@@ -260,10 +268,16 @@
             }
         }
 
+        var currentEditingId = null;
+
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
             var btnSalvar = document.getElementById('btn-salvar');
+            var btnEditModal = document.getElementById('btn-edit-modal');
+            var btnDelModal = document.getElementById('btn-del-modal');
             var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
+            
+            currentEditingId = id;
             
             if (acao === 'criar') {
                 document.getElementById('titulo-modal').innerText = 'Nova Estação de Trabalho';
@@ -271,9 +285,10 @@
                 document.getElementById('item-acao').value = 'criar';
                 document.getElementById('item-id').value = '';
                 btnSalvar.style.display = 'block';
+                btnEditModal.classList.add('hidden');
+                btnDelModal.classList.add('hidden');
                 inputs.forEach(i => i.disabled = false);
                 
-                // Mostrar todos os blocos opcionais ao criar novo
                 document.getElementById('monitor2').closest('.p-3').style.display = 'block';
                 document.getElementById('nobreak').closest('.p-3').style.display = 'block';
             } else {
@@ -308,18 +323,21 @@
                     document.getElementById('serN').value = item['Serial N'] || '';
                     document.getElementById('patN').value = item['Patrimonio N'] || '';
 
-                    // Condicionais para ocultar opcionais vazios
                     ocultarVazios('monitor2', item['Monitor 2']);
                     ocultarVazios('nobreak', item['Nobreak']);
 
                     if (acao === 'visualizar') {
-                        document.getElementById('titulo-modal').innerText = 'Detalhes da Estação';
+                        document.getElementById('titulo-modal').innerText = 'Visualização';
                         btnSalvar.style.display = 'none';
+                        btnEditModal.classList.remove('hidden');
+                        btnDelModal.classList.remove('hidden');
                         inputs.forEach(i => i.disabled = true);
                     } else {
                         document.getElementById('titulo-modal').innerText = 'Editar Estação';
                         document.getElementById('item-acao').value = 'editar';
                         btnSalvar.style.display = 'block';
+                        btnEditModal.classList.add('hidden');
+                        btnDelModal.classList.add('hidden');
                         inputs.forEach(i => i.disabled = false);
                     }
                 } else {
@@ -327,6 +345,24 @@
                     fecharModal();
                 }
             }
+        }
+
+        function mudarParaEdicao() {
+            var btnSalvar = document.getElementById('btn-salvar');
+            var btnEditModal = document.getElementById('btn-edit-modal');
+            var btnDelModal = document.getElementById('btn-del-modal');
+            var inputs = document.getElementById('form-equipamento').querySelectorAll('input, select');
+            
+            document.getElementById('titulo-modal').innerText = 'Editar Estação';
+            document.getElementById('item-acao').value = 'editar';
+            btnSalvar.style.display = 'block';
+            btnEditModal.classList.add('hidden');
+            btnDelModal.classList.add('hidden');
+            inputs.forEach(i => i.disabled = false);
+            
+            // Reexibe opcionais ao editar para permitir alteração se necessário
+            document.getElementById('monitor2').closest('.p-3').style.display = 'block';
+            document.getElementById('nobreak').closest('.p-3').style.display = 'block';
         }
 
         function ocultarVazios(elId, valor) {
@@ -344,26 +380,20 @@
             document.getElementById('modal-cadastro').classList.add('hidden');
         }
 
-        async function deletarEquipamento(event, id) {
-            event.stopPropagation();
+        async function deletarEquipamentoModal() {
+            if(!currentEditingId) return;
             if(!confirm("Tem certeza que deseja apagar esta estação permanentemente?")) {
                 return;
             }
             
-            var btn = event.currentTarget;
-            var iconeOriginal = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            var dados = { acao: 'deletar', id: id };
+            var dados = { acao: 'deletar', id: currentEditingId };
 
             try {
                 await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                fecharModal();
                 carregarDados();
             } catch (error) {
                 alert("Erro ao apagar o registro.");
-                btn.innerHTML = iconeOriginal;
-                btn.disabled = false;
             }
         }
 
