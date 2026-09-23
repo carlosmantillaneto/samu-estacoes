@@ -279,6 +279,7 @@
 
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
             var btnSalvar = document.getElementById('btn-salvar');
             var btnDescartarBaixo = document.getElementById('btn-descartar-baixo');
             var btnEditModal = document.getElementById('btn-edit-modal');
@@ -407,6 +408,7 @@
 
         function fecharModal() {
             document.getElementById('modal-cadastro').classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         async function deletarEquipamentoModal() {
