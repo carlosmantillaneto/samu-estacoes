@@ -53,7 +53,7 @@
     <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[95vh] flex flex-col">
-            <div class="bg-samudark px-3 py-1.5 flex justify-end items-center gap-2 text-white border-b-4 border-samudark shrink-0">
+            <div class="bg-samured px-3 py-1.5 flex justify-end items-center gap-2 text-white border-b-4 border-samured shrink-0">
                 <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
                 <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
                 <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
@@ -66,8 +66,8 @@
                     <input type="hidden" id="item-acao" value="criar">
 
                     <!-- Responsável -->
-                    <div class="p-2.5 bg-white border-l-4 border-samured rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samudark">
+                    <div class="p-2.5 bg-white rounded-md space-y-1.5">
+                        <div class="pb-0.5 border-b-2 border-samured">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Responsável</p>
                         </div>
                         <div class="pt-1">
@@ -77,8 +77,8 @@
                     </div>
 
                     <!-- Computador -->
-                    <div class="p-2.5 bg-white border-l-4 border-samured rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samudark">
+                    <div class="p-2.5 bg-white rounded-md space-y-1.5">
+                        <div class="pb-0.5 border-b-2 border-samured">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -125,11 +125,15 @@
                                 <input type="text" id="armazenamento" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500 bg-white" placeholder="SSD 240">
                             </div>
                         </div>
+                        <div class="pt-1">
+                            <label class="block text-[11px] font-semibold text-gray-700">Observação</label>
+                            <input type="text" id="observacao" class="w-full border border-gray-300 rounded p-1.5 text-xs focus:outline-none focus:border-gray-500 bg-white" placeholder="-">
+                        </div>
                     </div>
 
                     <!-- Monitor -->
-                    <div class="p-2.5 bg-white border-l-4 border-samured rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samudark">
+                    <div class="p-2.5 bg-white rounded-md space-y-1.5">
+                        <div class="pb-0.5 border-b-2 border-samured">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -155,8 +159,8 @@
                     </div>
 
                     <!-- Monitor Secundário -->
-                    <div id="bloco-monitor2" class="p-2.5 bg-white border-l-4 border-samured rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samudark">
+                    <div id="bloco-monitor2" class="p-2.5 bg-white rounded-md space-y-1.5">
+                        <div class="pb-0.5 border-b-2 border-samured">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -182,8 +186,8 @@
                     </div>
 
                     <!-- Nobreak -->
-                    <div id="bloco-nobreak" class="p-2.5 bg-white border-l-4 border-samured rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samudark">
+                    <div id="bloco-nobreak" class="p-2.5 bg-white rounded-md space-y-1.5">
+                        <div class="pb-0.5 border-b-2 border-samured">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Nobreak</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -323,6 +327,7 @@
                     document.getElementById('cpu').value = capitalizar(item['CPU'] || '');
                     document.getElementById('memoria').value = capitalizar(item['Memoria'] || '');
                     document.getElementById('armazenamento').value = capitalizar(item['Armazenamento'] || '');
+                    document.getElementById('observacao').value = capitalizar(item['Observacao'] || '');
                     
                     document.getElementById('fab1').value = capitalizar(item['Fabricante 1'] || '');
                     document.getElementById('mod1').value = item['Modelo 1'] || '';
@@ -447,6 +452,7 @@
                 cpu: capitalizar(document.getElementById('cpu').value.trim()) || '-',
                 memoria: capitalizar(document.getElementById('memoria').value.trim()) || '-',
                 armazenamento: capitalizar(document.getElementById('armazenamento').value.trim()) || '-',
+                observacao: capitalizar(document.getElementById('observacao').value.trim()) || '-',
                 monitor1: '-',
                 fab1: capitalizar(document.getElementById('fab1').value.trim()) || '-',
                 mod1: document.getElementById('mod1').value.trim() || '-',
