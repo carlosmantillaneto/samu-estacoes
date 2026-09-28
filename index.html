@@ -23,11 +23,11 @@
     <style>
         .linha-degrade { border-bottom: 2px solid transparent; border-image: linear-gradient(to right, #002D66, #0160A4, #B9CDDB) 1; }
         .linha-degrade-grossa { border-bottom: 4px solid transparent; border-image: linear-gradient(to right, #002D66, #0160A4, #B9CDDB) 1; }
-        /* Fundo: degrade suave em azul + marca d'agua SPDM (fixos, nao rolam com a pagina) */
-        body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background: linear-gradient(180deg, #FFFFFF 0%, #F0F6FB 55%, #E1ECF6 100%); }
-        body::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.09;
-            background: url('fundo-spdm-marca.png') right bottom / auto 72vh no-repeat; }
+        /* Fundo: degrade azul claro (mais forte embaixo, claro em cima), fixo na tela */
+        body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: linear-gradient(0deg, #D1E2EF 0%, #E8F0F8 45%, #FFFFFF 100%); }
+        /* Altura do card ajustada a barra do navegador no celular (dvh = area realmente visivel) */
+        .modal-altura { max-height: 95vh; max-height: 95dvh; }
     </style>
 </head>
 <body class="bg-white min-h-screen font-sans">
@@ -62,7 +62,7 @@
 
     <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
-        <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[95vh] flex flex-col">
+        <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden modal-altura flex flex-col">
             <div class="bg-gradient-to-r from-samunavy to-samuazul px-3 py-0.5 flex justify-end items-center gap-1 text-white shrink-0">
                 <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samuclaro p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
                 <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samuclaro p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
