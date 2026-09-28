@@ -23,9 +23,14 @@
     <style>
         .linha-degrade { border-bottom: 2px solid transparent; border-image: linear-gradient(to right, #002D66, #0160A4, #B9CDDB) 1; }
         .linha-degrade-grossa { border-bottom: 4px solid transparent; border-image: linear-gradient(to right, #002D66, #0160A4, #B9CDDB) 1; }
+        /* Fundo: degrade suave em azul + marca d'agua SPDM (fixos, nao rolam com a pagina) */
+        body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F6FB 55%, #E1ECF6 100%); }
+        body::after { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.09;
+            background: url('fundo-spdm-marca.png') right bottom / auto 72vh no-repeat; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans">
+<body class="bg-white min-h-screen font-sans">
     
     <!-- Header Oficial SAMU Limpo -->
     <header class="bg-white text-samunavy shadow-sm sticky top-0 z-40 linha-degrade-grossa">
