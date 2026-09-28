@@ -11,8 +11,9 @@
             theme: { 
                 extend: { 
                     colors: { 
-                        samured: '#E30613',
-                        samudark: '#0A2540',
+                        samuazul: '#0160A4',
+                        samunavy: '#002D66',
+                        samuclaro: '#B9CDDB',
                         samublue: '#F0F6FB'
                     } 
                 } 
@@ -23,14 +24,14 @@
 <body class="bg-gray-50 min-h-screen font-sans">
     
     <!-- Header Oficial SAMU Limpo -->
-    <header class="bg-white text-samudark shadow-sm sticky top-0 z-40 border-b-4 border-samured">
+    <header class="bg-white text-samunavy shadow-sm sticky top-0 z-40 border-b-4 border-samuazul">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 flex items-center justify-center">
                     <img src="logo-samu.jpg" alt="Logo SAMU" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <h1 class="text-base font-bold leading-tight tracking-wide text-samudark">SAMU - MOGI DAS CRUZES</h1>
+                    <h1 class="text-base font-bold leading-tight tracking-wide text-samunavy">SAMU - MOGI DAS CRUZES</h1>
                     <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Controle de estações</p>
                 </div>
             </div>
@@ -39,25 +40,25 @@
 
     <main class="max-w-md mx-auto px-4 py-6 mb-20">
         <div id="loading" class="text-center py-10">
-            <i class="fas fa-spinner fa-spin text-4xl text-samured"></i>
+            <i class="fas fa-spinner fa-spin text-4xl text-samuazul"></i>
             <p class="mt-2 text-gray-600 text-sm">Sincronizando com a base...</p>
         </div>
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
     <!-- Botão Flutuante (Criar Novo) -->
-    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-samured text-white w-14 h-14 rounded-full shadow-lg hover:bg-red-700 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
+    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-samuazul text-white w-14 h-14 rounded-full shadow-lg hover:bg-samunavy transition flex items-center justify-center text-2xl z-40 border-2 border-white">
         <i class="fas fa-plus"></i>
     </button>
 
     <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
         <div class="bg-white rounded-lg w-full max-w-md shadow-xl overflow-hidden max-h-[95vh] flex flex-col">
-            <div class="bg-samured px-3 py-1.5 flex justify-end items-center gap-2 text-white border-b-4 border-samured shrink-0">
-                <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
-                <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samured p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
-                <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-red-300 p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
-                <button onclick="fecharModal()" class="text-white hover:text-samured ml-1"><i class="fas fa-times text-xl"></i></button>
+            <div class="bg-samuazul px-3 py-1.5 flex justify-end items-center gap-2 text-white border-b-4 border-samuazul shrink-0">
+                <button onclick="mudarParaEdicao()" id="btn-edit-modal" class="text-white hover:text-samuclaro p-1 rounded transition hidden" title="Editar"><i class="fas fa-edit"></i></button>
+                <button onclick="deletarEquipamentoModal()" id="btn-del-modal" class="text-white hover:text-samuclaro p-1 rounded transition hidden" title="Excluir"><i class="fas fa-trash"></i></button>
+                <button onclick="descartarEdicao()" id="btn-descartar-modal" class="text-white hover:text-samuclaro p-1 rounded transition hidden" title="Descartar Alterações"><i class="fas fa-undo"></i></button>
+                <button onclick="fecharModal()" class="text-white hover:text-samuclaro ml-1"><i class="fas fa-times text-xl"></i></button>
             </div>
             
             <div class="overflow-y-auto p-3 space-y-2.5">
@@ -67,7 +68,7 @@
 
                     <!-- Responsável -->
                     <div class="p-2.5 bg-white rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samured">
+                        <div class="pb-0.5 border-b-2 border-samuazul">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Responsável</p>
                         </div>
                         <div class="pt-1">
@@ -78,7 +79,7 @@
 
                     <!-- Computador -->
                     <div class="p-2.5 bg-white rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samured">
+                        <div class="pb-0.5 border-b-2 border-samuazul">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Computador</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -133,7 +134,7 @@
 
                     <!-- Monitor -->
                     <div class="p-2.5 bg-white rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samured">
+                        <div class="pb-0.5 border-b-2 border-samuazul">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -160,7 +161,7 @@
 
                     <!-- Monitor Secundário -->
                     <div id="bloco-monitor2" class="p-2.5 bg-white rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samured">
+                        <div class="pb-0.5 border-b-2 border-samuazul">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Monitor Secundário</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -187,7 +188,7 @@
 
                     <!-- Nobreak -->
                     <div id="bloco-nobreak" class="p-2.5 bg-white rounded-md space-y-1.5">
-                        <div class="pb-0.5 border-b-2 border-samured">
+                        <div class="pb-0.5 border-b-2 border-samuazul">
                             <p class="text-xs font-bold text-gray-800 uppercase tracking-wide">Nobreak</p>
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 pt-1">
@@ -216,7 +217,7 @@
                         <button type="button" onclick="descartarEdicao()" id="btn-descartar-baixo" class="w-1/2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition shadow hidden">
                             Descartar
                         </button>
-                        <button type="submit" id="btn-salvar" class="w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow">
+                        <button type="submit" id="btn-salvar" class="w-full bg-samuazul hover:bg-samunavy text-white font-bold py-3 px-4 rounded-lg transition shadow">
                             Salvar
                         </button>
                     </div>
@@ -257,12 +258,12 @@
                         var cardHTML = '<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden mb-3">' +
                             '<div class="bg-gray-50 p-3.5 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition" onclick="abrirModal(\'visualizar\', \'' + idItem + '\')">' +
                                 '<div class="flex items-center gap-3 truncate">' +
-                                    '<div class="bg-red-50 w-9 h-9 flex justify-center items-center rounded-full text-samured flex-shrink-0 border border-red-100">' +
+                                    '<div class="bg-samublue w-9 h-9 flex justify-center items-center rounded-full text-samuazul flex-shrink-0 border border-samuclaro">' +
                                         '<i class="fas fa-user text-sm"></i>' +
                                     '</div>' +
                                     '<div class="truncate">' +
                                         '<h3 class="font-bold text-black uppercase text-sm truncate">' + resp + '</h3>' +
-                                        '<p class="text-[11px] text-gray-400 truncate"><i class="fas fa-map-marker-alt text-samured"></i> ' + setor + '</p>' +
+                                        '<p class="text-[11px] text-gray-400 truncate"><i class="fas fa-map-marker-alt text-samuazul"></i> ' + setor + '</p>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -301,7 +302,7 @@
                 document.getElementById('setor').value = '';
                 
                 btnSalvar.style.display = 'block';
-                btnSalvar.className = 'w-full bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+                btnSalvar.className = 'w-full bg-samuazul hover:bg-samunavy text-white font-bold py-3 px-4 rounded-lg transition shadow';
                 btnDescartarBaixo.style.display = 'none';
                 btnEditModal.classList.add('hidden');
                 btnDelModal.classList.add('hidden');
@@ -357,7 +358,7 @@
                     } else {
                         document.getElementById('item-acao').value = 'editar';
                         btnSalvar.style.display = 'block';
-                        btnSalvar.className = 'w-1/2 bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+                        btnSalvar.className = 'w-1/2 bg-samuazul hover:bg-samunavy text-white font-bold py-3 px-4 rounded-lg transition shadow';
                         btnDescartarBaixo.style.display = 'block';
                         btnEditModal.classList.add('hidden');
                         btnDelModal.classList.add('hidden');
@@ -381,7 +382,7 @@
             
             document.getElementById('item-acao').value = 'editar';
             btnSalvar.style.display = 'block';
-            btnSalvar.className = 'w-1/2 bg-samured hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition shadow';
+            btnSalvar.className = 'w-1/2 bg-samuazul hover:bg-samunavy text-white font-bold py-3 px-4 rounded-lg transition shadow';
             btnDescartarBaixo.style.display = 'block';
             btnEditModal.classList.add('hidden');
             btnDelModal.classList.add('hidden');
