@@ -70,7 +70,7 @@
                 <button onclick="fecharModal()" class="text-white hover:text-samuclaro p-1"><i class="fas fa-times"></i></button>
             </div>
             
-            <div class="overflow-y-auto p-3 space-y-2.5">
+            <div id="conteudo-modal" class="overflow-y-auto p-3 space-y-2.5">
                 <form id="form-equipamento" class="space-y-2.5" onsubmit="salvarEquipamento(event)">
                     <input type="hidden" id="item-id">
                     <input type="hidden" id="item-acao" value="criar">
@@ -299,6 +299,7 @@
 
         function abrirModal(acao, id) {
             document.getElementById('modal-cadastro').classList.remove('hidden');
+            document.getElementById('conteudo-modal').scrollTop = 0;
             document.body.style.overflow = 'hidden';
             var btnSalvar = document.getElementById('btn-salvar');
             var btnDescartarBaixo = document.getElementById('btn-descartar-baixo');
