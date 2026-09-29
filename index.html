@@ -258,7 +258,13 @@
 
                 if (result.status === "success") {
                     dadosGlobais = result.data;
-                    
+
+                    dadosGlobais.sort(function(a, b) {
+                        var nomeA = (a['Responsavel'] || a['Responsável'] || '').toString().toLowerCase();
+                        var nomeB = (b['Responsavel'] || b['Responsável'] || '').toString().toLowerCase();
+                        return nomeA.localeCompare(nomeB, 'pt-BR');
+                    });
+
                     dadosGlobais.forEach(function(eq) {
                         var resp = capitalizar(eq['Responsavel'] || eq['Responsável'] || 'Sem Atribuição');
                         var setor = capitalizar(eq['Setor'] || '-');
