@@ -223,10 +223,10 @@
                     </div>
                     
                     <div id="botoes-acao-container" class="flex gap-2 mt-3">
-                        <button type="button" onclick="descartarEdicao()" id="btn-descartar-baixo" class="w-1/2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition shadow hidden">
+                        <button type="button" onclick="descartarEdicao()" id="btn-descartar-baixo" class="w-1/2 h-12 flex items-center justify-center whitespace-nowrap bg-gray-500 hover:bg-gray-600 text-white font-bold px-4 rounded-lg transition shadow hidden">
                             Descartar
                         </button>
-                        <button type="submit" id="btn-salvar" class="w-full bg-gradient-to-r from-samuazul to-samunavy hover:brightness-110 text-white font-bold py-3 px-4 rounded-lg transition shadow">
+                        <button type="submit" id="btn-salvar" class="w-full h-12 flex items-center justify-center whitespace-nowrap bg-gradient-to-r from-samuazul to-samunavy hover:brightness-110 text-white font-bold px-4 rounded-lg transition shadow">
                             Salvar
                         </button>
                     </div>
@@ -453,8 +453,13 @@
         async function salvarEquipamento(event) {
             event.preventDefault();
             var btn = document.getElementById('btn-salvar');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processando...';
             btn.disabled = true;
+            var pontos = 0;
+            btn.textContent = 'Processando.';
+            var animProcessando = setInterval(function() {
+                pontos = (pontos + 1) % 3;
+                btn.textContent = 'Processando' + '.'.repeat(pontos + 1);
+            }, 400);
 
             var dados = {
                 acao: document.getElementById('item-acao').value,
@@ -493,7 +498,8 @@
             } catch (error) {
                 alert("Erro ao comunicar com a base.");
             } finally {
-                btn.innerHTML = 'Salvar';
+                clearInterval(animProcessando);
+                btn.textContent = 'Salvar';
                 btn.disabled = false;
             }
         }
