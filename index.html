@@ -260,8 +260,12 @@
                     dadosGlobais = result.data;
 
                     dadosGlobais.sort(function(a, b) {
-                        var nomeA = (a['Responsavel'] || a['Responsável'] || '').toString().toLowerCase();
-                        var nomeB = (b['Responsavel'] || b['Responsável'] || '').toString().toLowerCase();
+                        var nomeA = (a['Responsavel'] || a['Responsável'] || '').toString().trim().toLowerCase();
+                        var nomeB = (b['Responsavel'] || b['Responsável'] || '').toString().trim().toLowerCase();
+                        var valeA = /^[a-zà-ÿ]/i.test(nomeA);
+                        var valeB = /^[a-zà-ÿ]/i.test(nomeB);
+                        if (valeA && !valeB) return -1;
+                        if (!valeA && valeB) return 1;
                         return nomeA.localeCompare(nomeB, 'pt-BR');
                     });
 
