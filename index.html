@@ -6,6 +6,7 @@
     <title>Controle Estações - SAMU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         tailwind.config = { 
             theme: { 
@@ -32,7 +33,19 @@
 </head>
 <body class="bg-white min-h-screen font-sans">
     
-    <!-- Header Oficial SAMU Limpo -->
+    <!-- Tela de login (Google) -->
+    <div id="tela-login" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center px-6 text-center">
+        <div class="w-16 h-16 mb-3">
+            <img src="logo-samu.jpg" alt="Logo SAMU" class="w-full h-full object-contain">
+        </div>
+        <h1 class="text-lg font-bold text-samunavy mb-1">SAMU - MOGI DAS CRUZES</h1>
+        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-8">Controle de estações</p>
+        <p class="text-sm text-gray-600 mb-4">Entre com sua conta Google para continuar</p>
+        <div id="google-btn-container"></div>
+        <p id="erro-login" class="text-red-500 text-xs mt-4 hidden">Não foi possível entrar. Tente novamente.</p>
+    </div>
+
+    <div id="app-conteudo" class="hidden">
     <header class="bg-white text-samunavy shadow-sm sticky top-0 z-40 linha-degrade-grossa">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -44,6 +57,9 @@
                     <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Controle de estações</p>
                 </div>
             </div>
+            <button onclick="sair()" class="text-gray-400 hover:text-samuazul transition" title="Sair">
+                <i class="fas fa-right-from-bracket"></i>
+            </button>
         </div>
     </header>
 
@@ -55,10 +71,11 @@
         <div id="lista-estacoes" class="space-y-4 hidden"></div>
     </main>
 
-    <!-- Botão Flutuante (Criar Novo) -->
-    <button onclick="abrirModal('criar')" class="fixed bottom-6 right-6 bg-gradient-to-br from-samuazul to-samunavy text-white w-14 h-14 rounded-full shadow-lg hover:brightness-110 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
+    <!-- Botão Flutuante (Criar Novo) - só aparece para o e-mail administrador -->
+    <button onclick="abrirModal('criar')" id="btn-adicionar" class="hidden fixed bottom-6 right-6 bg-gradient-to-br from-samuazul to-samunavy text-white w-14 h-14 rounded-full shadow-lg hover:brightness-110 transition flex items-center justify-center text-2xl z-40 border-2 border-white">
         <i class="fas fa-plus"></i>
     </button>
+    </div><!-- fecha #app-conteudo -->
 
     <!-- Modal de Formulário / Visualização -->
     <div id="modal-cadastro" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center px-4">
@@ -239,6 +256,41 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxoAeIrAI-gtmFWD9b6dT0fzfp7kVas-mfUxKtN9ChDbLkftGLEMtVQPs6bJ7xq6p2o/exec";
         let dadosGlobais = [];
 
+        // ---- Login com Google ----
+        const GOOGLE_CLIENT_ID = "47231888741-3kbte3jgrpsgd9bqnndd8bp004gsnsq8.apps.googleusercontent.com"; // TODO: substituir pelo Client ID do Google Cloud Console
+        const EMAIL_ADMIN = "carlosmantillaneto@gmail.com"; // TODO: substituir pelo seu e-mail do Google (quem pode editar/criar/apagar)
+
+        var idToken = null;
+        var emailUsuario = null;
+        window.souAdmin = false;
+
+        function aoLogar(response) {
+            idToken = response.credential;
+            try {
+                emailUsuario = JSON.parse(atob(idToken.split('.')[1])).email;
+            } catch (erroDecode) {
+                emailUsuario = null;
+            }
+            if (!emailUsuario) {
+                document.getElementById('erro-login').classList.remove('hidden');
+                return;
+            }
+            window.souAdmin = emailUsuario.toLowerCase() === EMAIL_ADMIN.toLowerCase();
+            document.getElementById('btn-adicionar').classList.toggle('hidden', !window.souAdmin);
+            document.getElementById('tela-login').classList.add('hidden');
+            document.getElementById('app-conteudo').classList.remove('hidden');
+            carregarDados();
+        }
+
+        function sair() {
+            idToken = null;
+            emailUsuario = null;
+            window.souAdmin = false;
+            google.accounts.id.disableAutoSelect();
+            document.getElementById('app-conteudo').classList.add('hidden');
+            document.getElementById('tela-login').classList.remove('hidden');
+        }
+
         function capitalizar(str) {
             if (!str || str === '-') return '-';
             return str.toLowerCase().replace(/(^|\s)\S/g, function(L) { return L.toUpperCase(); });
@@ -253,8 +305,13 @@
             lista.innerHTML = ''; 
 
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL + '?token=' + encodeURIComponent(idToken || ''));
                 const result = await response.json();
+
+                if (result.status === "erro") {
+                    loading.innerHTML = '<p class="text-red-500"><i class="fas fa-exclamation-triangle"></i> ' + (result.mensagem || 'Sessão expirada, faça login novamente.') + '</p>';
+                    return;
+                }
 
                 if (result.status === "success") {
                     dadosGlobais = result.data;
@@ -371,8 +428,10 @@
                     if (acao === 'visualizar') {
                         btnSalvar.style.display = 'none';
                         btnDescartarBaixo.style.display = 'none';
-                        btnEditModal.classList.remove('hidden');
-                        btnDelModal.classList.remove('hidden');
+                        if (window.souAdmin) {
+                            btnEditModal.classList.remove('hidden');
+                            btnDelModal.classList.remove('hidden');
+                        }
                         btnDescartarModal.classList.add('hidden');
                         inputs.forEach(i => i.disabled = true);
                     } else {
@@ -443,10 +502,15 @@
                 return;
             }
             
-            var dados = { acao: 'deletar', id: currentEditingId };
+            var dados = { token: idToken, acao: 'deletar', id: currentEditingId };
 
             try {
-                await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                const resposta = await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                const resultado = await resposta.json();
+                if (resultado.status === 'erro') {
+                    alert(resultado.mensagem || 'Sem permissão para esta ação.');
+                    return;
+                }
                 fecharModal();
                 carregarDados();
             } catch (error) {
@@ -466,6 +530,7 @@
             }, 400);
 
             var dados = {
+                token: idToken,
                 acao: document.getElementById('item-acao').value,
                 id: document.getElementById('item-id').value,
                 responsavel: capitalizar(document.getElementById('responsavel').value.trim()) || '-',
@@ -496,7 +561,12 @@
             };
 
             try {
-                await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                const resposta = await fetch(API_URL, { method: 'POST', body: JSON.stringify(dados) });
+                const resultado = await resposta.json();
+                if (resultado.status === 'erro') {
+                    alert(resultado.mensagem || 'Sem permissão para esta ação.');
+                    return;
+                }
                 fecharModal();
                 carregarDados();
             } catch (error) {
@@ -508,7 +578,11 @@
             }
         }
 
-        window.onload = carregarDados;
+        window.onload = function() {
+            google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: aoLogar });
+            google.accounts.id.renderButton(document.getElementById('google-btn-container'), { theme: 'filled_blue', size: 'large', text: 'signin_with', locale: 'pt-BR' });
+            google.accounts.id.prompt();
+        };
     </script>
 </body>
 </html>
